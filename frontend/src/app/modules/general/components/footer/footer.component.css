@@ -1,0 +1,13 @@
+.footer-container {
+    margin-top: auto;
+    text-align: center;
+    background-color: rgb(171, 252, 252);
+    margin-top: 20px;
+    text-align: right;
+    height: 98%;
+    width: 98%;
+    font-size: 11px;
+    font-family: Calibri;
+    border-radius: 8px; 
+    padding: 1%;
+}

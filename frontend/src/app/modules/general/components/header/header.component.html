@@ -1,0 +1,9 @@
+<div class="header-container">
+    <div class="header-left">
+      <p>Klaudek's Bank</p>
+    </div>
+    <div class="header-right" (mouseover)="showLogoutPanel()" (mouseleave)="hideLogoutPanel()">
+        <p>Witaj, {{ user.name }} {{ user.lastname }}! ↓</p>
+        <p class="logout" [ngClass]="{'show': showLogout}" (click)="logout()">Wyloguj</p>
+    </div>
+</div>

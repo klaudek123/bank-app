@@ -1,6 +1,6 @@
 /* Global styles */
 body {
-    height: 100vh; /* Ustawienie wysokości na całą wysokość widoku */
+    height: 100%; /* Ustawienie wysokości na całą wysokość widoku */
     position: relative; /* Ustawienie pozycji na relative dla kontenera */
 }
 
@@ -18,7 +18,7 @@ body {
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
+    height: 104vh;
     z-index: -1;
 }
 
@@ -26,6 +26,7 @@ body {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    filter: brightness(0.85); /* zmniejszenie jasności do 80% */
 }
 
 .form-security-container {
@@ -69,9 +70,27 @@ body {
 
 .ads-container {
     text-align: center;
-    height: 15%;
+    height: 6%;
     width: 96%;
     margin: 2% 2% 5%;
+}
+
+button {
+    background-color: #4c65af; /* Kolor tła */
+    border: none;
+    color: white; /* Kolor tekstu */
+    padding: 7px 16px; /* Wielkość i odstęp wewnątrz guzika */
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 5px; /* Zaokrąglenie rogów */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Dodanie cienia */
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #4548a0; /* Zmiana koloru tła po najechaniu myszką */
 }
 
 .footer {
