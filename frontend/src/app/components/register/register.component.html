@@ -1,0 +1,57 @@
+<!-- register-page.component.html -->
+<div class="register-container">
+    <div class="header-container">
+        <div class="header-left">
+            <p>Klaudek's Bank </p>
+        </div>
+        <div class="header-right">
+            <p>Data</p>
+        </div>
+    </div>
+
+    <div class="register-form-container">
+        <div class="register-form-container2">
+            <!-- <form (submit)="handleFormSubmit()"> -->
+                <h1>Załóż nowe konto</h1>
+                <h3>Wypełnij poniższe pola aby założyć nowe konto</h3>
+
+                <label>Imię:</label>
+                <br />
+                <input type="text" [(ngModel)]="firstname" required />
+                <br />
+                <br />
+
+                <label>Nazwisko:</label>
+                <br />
+                <input type="text" [(ngModel)]="lastname" required />
+                <br />
+                <br />
+
+                <label>Email:</label>
+                <br />
+                <input type="text" [(ngModel)]="email" required />
+                <br />
+                <br />
+
+                <p>Hasło:</p>
+                <input type="password" [(ngModel)]="password" required />
+                <br />
+                <p>Powtórz hasło:</p>
+                <input type="password" [(ngModel)]="passwordCheck" required />
+                <br />
+                <br />
+
+                <h3>Informacje prawne</h3>
+                <input type="checkbox" [(ngModel)]="acceptTerms" required />
+                Akceptuję regulamin
+                <br />
+                <br />
+
+                <button type="submit">Załóż konto</button>
+                <a routerLink="/login"><button type="button">Anuluj</button></a>
+            <!-- </form> -->
+
+            <h6 style="text-align: right;">Author: Klaudek123</h6>
+        </div>
+    </div>
+</div>
