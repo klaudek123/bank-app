@@ -13,67 +13,48 @@
     </div>
 
     <div class="register-form-container">
-            <!-- <form (submit)="handleFormSubmit()"> -->
                 <h1>Załóż nowe konto</h1>
                 <h3>Wypełnij poniższe pola aby założyć nowe konto</h3>
 
-                <!-- <label>Imię:</label>
-                <br />
-                <input type="text" [(ngModel)]="firstname" required />
-                <br /> <br />
-
-                <label>Nazwisko:</label>
-                <br />
-                <input type="text" [(ngModel)]="lastname" required />
-                <br /> <br />
-
-                <label>Email:</label>
-                <br />
-                <input type="text" [(ngModel)]="email" required />
-                <br /> <br />
-
-                <p>Hasło:</p>
-                <input type="password" [(ngModel)]="password" required />
-                <br />
-                <p>Powtórz hasło:</p>
-                <input type="password" [(ngModel)]="passwordCheck" required />
-                <br /> <br />
-
-                <h3>Informacje prawne</h3>
-                <input type="checkbox" [(ngModel)]="acceptTerms" required />
-                Akceptuję regulamin
-                <br /> <br /> -->
-
                 <label>Imię:</label>
                 <br />
-                <input type="text" />
+                <input type="text" [(ngModel)]="firstname" name="firstname" required />
                 <br /> <br />
 
                 <label>Nazwisko:</label>
                 <br />
-                <input type="text"  />
+                <input type="text" [(ngModel)]="lastname" name="lastname" required />
+                <br /> <br />
+
+                <label>Pesel:</label>
+                <br/>
+                <input type="text" [(ngModel)]="personalId" name="pesel" required>
+                <br /> <br />
+
+                <label>Data urodzenia:</label>
+                <br />
+                <input type="date" [(ngModel)]="dateOfBirth" name="dateOfBirth" required />
                 <br /> <br />
 
                 <label>Email:</label>
                 <br />
-                <input type="text"  />
+                <input type="email" [(ngModel)]="email" name="email" required />
                 <br /> <br />
 
+
                 <p>Hasło:</p>
-                <input type="password" />
+                <input type="password" [(ngModel)]="password" name="password" required />
                 <br />
                 <p>Powtórz hasło:</p>
-                <input type="password" />
+                <input type="password" [(ngModel)]="passwordCheck" name="passwordCheck" required />
                 <br /> <br />
 
                 <h3>Informacje prawne</h3>
-                <input type="checkbox"  />
+                <input type="checkbox" [(ngModel)]="acceptTerms" name="acceptTerms" required />
                 Akceptuję regulamin
                 <br /> <br />
 
-                <button type="submit">Załóż konto</button>
-                <a routerLink="/login"><button type="button">Anuluj</button></a>
-            <!-- </form> -->
+                <button type="submit" (click)="handleFormSubmit()">Załóż konto</button>
 
             <h6 style="text-align: right;">Author: Klaudek123</h6>
     </div>

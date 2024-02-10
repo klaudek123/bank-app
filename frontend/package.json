@@ -20,6 +20,7 @@
     "@angular/router": "^17.1.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
+    "validate-polish": "^2.1.40",
     "zone.js": "~0.14.3"
   },
   "devDependencies": {
