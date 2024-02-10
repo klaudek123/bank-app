@@ -1,0 +1,38 @@
+.content {
+    max-height: 100%;
+    padding: 1.8%; /* Responsywne marginesy */
+    border-radius: 2%; /* Responsywne zaokrąglenie */
+  }
+  
+  .section {
+    margin-bottom: 1%; /* Responsywne marginesy */
+    background-color: #fff;
+    padding: 1%; /* Responsywne marginesy */
+    border-radius: 8px; /* Responsywne zaokrąglenie */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .section h2 {
+/* Responsywny rozmiar tekstu */
+    color: #333;
+    margin-bottom: 1%; /* Responsywne marginesy */
+  }
+  
+  .section-content {
+    margin-top: 1%; /* Responsywne marginesy */
+  }
+  
+  .section ul {
+    list-style-type: none;
+    padding-left: 0;
+  }
+  
+  .section ul li {
+    margin-bottom: 1%; /* Responsywne marginesy */
+  }
+  
+  .section ul li:first-child {
+    font-weight: bold;
+  }
+  
+  
