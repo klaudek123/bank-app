@@ -6,16 +6,11 @@
       <div class="form-container">
         <h1>Klaudek's Bank</h1>
         <h2>Logowanie</h2>
-        <!-- <form (ngSubmit)="handleLoginSubmit()">
-          <input type="text" id="login" name="login" [(ngModel)]="email" required />
-          <input type="password" id="password" name="password" [(ngModel)]="password" required />
-          <button type="submit">Zaloguj</button>
-        </form> -->
-        <input type="text" id="login" name="login"  required />
-        <input type="password" id="password" name="password" required /><br/>
-        <a routerLink="/general">
-          <button type="submit">Zaloguj</button> <br/><br/>
-        </a>
+          <label>Numer Klienta:</label><br/>
+          <input type="text" id="idAccount" name="idAccount" [(ngModel)]="idAccount" required /><br/>
+          <br /><label>Hasło:</label><br/>
+          <input type="password" id="password" name="password" [(ngModel)]="password" required /> <br />
+          <button type="submit" (click)="handleLoginSubmit()">Załóż konto</button><br/><br/>
         Nie masz jeszcze konta?<br/><br/>
         <a routerLink="/register">
           <button type="button">Rejestracja</button>

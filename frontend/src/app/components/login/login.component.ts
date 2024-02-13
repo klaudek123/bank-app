@@ -9,35 +9,45 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  //backgroundImage = require("../../assets/images/bank-background.jpg");
-  // email: string = "";
-  // password: string = "";
+  idAccount: string = "";
+  password: string = "";
   
-  // constructor(private router: Router, private http: HttpClient) {}
+  constructor(private router: Router, private http: HttpClient) {}
 
-  // handleLoginSubmit(): void {
-  //   if (!this.email) {
-  //     window.alert("Login jest pusty");
-  //     return;
-  //   }
+  handleLoginSubmit(): void {
+    if (!this.idAccount) {
+      window.alert("Numer Klienta jest pusty");
+      return;
+    }
 
-  //   if (!this.password) {
-  //     window.alert("Hasło jest puste");
-  //     return;
-  //   }
+    if (!this.password) {
+      window.alert("Hasło jest puste");
+      return;
+    }
 
-  //const loginClient = { email: this.email, password: this.password };
+  const loginClient = { idAccount: this.idAccount, password: this.password };
 
-  //   this.http.post<any>('http://localhost:8080/api/v1/auth/authenticate', loginClient)
-  //     .subscribe(
-  //       data => {
-  //         localStorage.setItem('jwtToken', data.token);
-  //         console.log("jwtToken z logowania: " + data.token);
-  //         this.router.navigate(['/general']);
-  //       },
-  //       error => {
-  //         console.error('Błąd podczas logowania.', error);
-  //       }
-  //     );
-  // }
+    this.http.post<any>('http://localhost:8080/accounts/login', loginClient)
+    .subscribe(
+      (response: any) => {
+        console.log(response);
+        // Sprawdź, czy odpowiedź zawiera kod 200 i komunikat "success"
+        if (response && response.message === "Zalogowano pomyślnie!") {
+          localStorage.setItem('idAccount', this.idAccount);
+          window.alert(response.message);
+          this.router.navigateByUrl('/general'); // Przekierowanie po pomyślnym zalogowaniu
+        } else {
+          // Obsługa przypadku, gdy logowanie się nie powiodło
+          if(response){
+            // window.alert(response.message);
+          }
+          // Możesz wyświetlić komunikat dla użytkownika lub podjąć inne działania w przypadku niepowodzenia logowania
+        }
+      },
+      error => {
+        window.alert('Błąd podczas logowania.'+ error);
+        // Handle login error (display error message to user, etc.)
+      }
+      );
+  }
 }

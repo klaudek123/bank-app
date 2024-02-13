@@ -18,6 +18,7 @@ export class RegisterComponent {
   email: string = "";
   password: string = "";
   passwordCheck: string = "";
+  address: string = "";
   acceptTerms: boolean = false;
   
   constructor(private router: Router, private http: HttpClient) {}
@@ -43,10 +44,20 @@ export class RegisterComponent {
       window.alert("Błędy pesel, musi się składać z 11 cyfr!" + this.personalId);
     }
 
+    if (!this.dateOfBirth) {
+      window.alert("Proszę wybrać datę urodzenia.");
+      return;
+    }
+
     if (!validateEmail(this.email)) {
       window.alert("Niepoprawny adres email.");
       return;
     }
+
+    // if (!validateLength(this.address, 2)) {
+    //   window.alert("Adres musi mieć co najmniej 2 znaki.");
+    //   return;
+    // }
 
     if (!validateLength(this.password, 3)) {
       window.alert("Hasło musi mieć co najmniej 3 znaki.");
@@ -57,23 +68,28 @@ export class RegisterComponent {
       return;
     }
 
-    // Przekazanie personalId do funkcji validatePESEL
+    if (!this.acceptTerms) {
+      window.alert("Proszę zaakceptować regulamin.");
+      return;
+    }
     
 
-    const user = {
+    const registerDTO = {
       personalId: this.personalId, // Musisz przekazać personalId jako null, ponieważ serwer generuje nowy identyfikator
       firstname: this.firstname,
       lastname: this.lastname,
       dateOfBirth: this.dateOfBirth, // Ta wartość może być null lub ustawiana na domyślną wartość w serwerze
       email: this.email,
-      address: null // Adres również może być null lub ustawiany w serwerze
+      address: this.address, // Adres również może być null lub ustawiany w serwerze
+      password: this.password
     };
 
-    console.log(user);
+    console.log(registerDTO);
 
-    this.http.post<any>('http://localhost:8080/users', user)
+    this.http.post<any>('http://localhost:8080/users', registerDTO)
       .subscribe(
-        () => {
+        (response) => {
+          window.alert("Udało się założyć konto. Numer klienta to: "+ response);
           this.redirectToLogin = true;
           this.router.navigateByUrl('/login'); // Przekierowanie do strony logowania po rejestracji
         },
