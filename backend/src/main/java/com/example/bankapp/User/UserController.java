@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/users")
-@CrossOrigin(origins = "*") // Pozwala na dostęp z dowolnego źródła
+//@CrossOrigin(origins = "*") // Pozwala na dostęp z dowolnego źródła
 public class UserController {
     private final UserRepository userRepository;
     private final UserService userService;

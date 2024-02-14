@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { AxiosService } from '../../../../axios.service';
 
 interface AccountInfo {
   owner: string;
@@ -24,27 +24,34 @@ export class DesktopComponent {
     accountName: 'Main Account',
     accountNumer: '61109010140000071219812874',
     currency: 'USD',
-    depositsInPLN: 5000,
-    accountBalance: 10000
+    depositsInPLN: NaN,
+    accountBalance: 12000
     // Tutaj można przypisać inne testowe wartości dla pól AccountInfo
   };
 
-  constructor(private router: Router, private http: HttpClient){ }
+  constructor(private router: Router, private axiosService : AxiosService){ }
 
 
   ngOnInit(): void {
     // Pobierz identyfikator konta z localStorage
-    const idAccount = localStorage.getItem('idAccount'); // działa już
-    console.log("idAccount = "+idAccount); // działa już
+    const idAccount = localStorage.getItem('idAccount');
+    console.log("idAccount = " + idAccount);
     if (idAccount) {
       // Wyślij żądanie do serwera, aby pobrać dane użytkownika na podstawie identyfikatora konta
-      this.http.get<any>(`http://localhost:8080/accounts/${idAccount}`)
-        .subscribe(
+      this.axiosService.request('GET', `http://localhost:8080/accounts/${idAccount}`, {})
+        .then(
           (response) => {
             // Ustaw dane użytkownika w komponencie nagłówka
-            this.testAccountInfo.accountBalance = response.balance;
-          },
+            this.testAccountInfo.accountBalance = response.data.balance;
+            this.testAccountInfo.accountNumer = response.data.number;
+          }
+        ).catch(
           (error) => {
+            if (error.response.status === 401) {
+              this.axiosService.setAuthToken(null);
+            } else {
+                this.testAccountInfo.owner = error.response.code;
+            }
             console.error('Błąd podczas pobierania danych użytkownika.', error);
           }
         );

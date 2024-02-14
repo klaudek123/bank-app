@@ -1,6 +1,6 @@
 package com.example.bankapp.Account;
 
-import com.example.bankapp.User.User;
+import com.example.bankapp.Config.UserAuthenticationProvider;
 import com.example.bankapp.User.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,16 +13,18 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/accounts")
-@CrossOrigin(origins = "*")
+//@CrossOrigin(origins = "*")
 public class AccountController {
     private final AccountRepository accountRepository;
     private final AccountService accountService;
     private final UserService userService;
+    private final UserAuthenticationProvider userAuthenticationProvider;
 
-    public AccountController(AccountRepository accountRepository, AccountService accountService, UserService userService) {
+    public AccountController(AccountRepository accountRepository, AccountService accountService, UserService userService, UserAuthenticationProvider userAuthenticationProvider) {
         this.accountRepository = accountRepository;
         this.accountService = accountService;
         this.userService = userService;
+        this.userAuthenticationProvider = userAuthenticationProvider;
     }
 
 
@@ -33,11 +35,14 @@ public class AccountController {
 
     @PostMapping("/login")
     public ResponseEntity<Object> login(@RequestBody LoginRequest loginRequest){
+        System.out.println(loginRequest.toString());
         Map<String, String> response = new HashMap<>();
         if(accountService.authenticateLogin(loginRequest.getIdAccount(), loginRequest.getPassword())){
-            response.put("message", "Zalogowano pomyślnie!");
-            System.out.println(ResponseEntity.status(HttpStatus.OK).body(response));
-            return ResponseEntity.status(HttpStatus.OK).body(response);
+            AuthDto authDto = new AuthDto(loginRequest.getIdAccount(), userAuthenticationProvider.createToken(loginRequest.getIdAccount()));
+//            response.put("message", "Zalogowano pomyślnie!");
+//            System.out.println(ResponseEntity.status(HttpStatus.OK).body(response));
+            System.out.printf(authDto.toString());
+            return ResponseEntity.status(HttpStatus.OK).body(authDto);
         }else {
             response.put("error", "Błąd logowania. Sprawdź email i hasło.");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
@@ -45,8 +50,8 @@ public class AccountController {
     }
 
     @GetMapping("/{idAccount}")
-    public ResponseEntity<Optional<Account>> getUserDetails(@PathVariable Long idAccount){
-        Optional<Account> account = accountService.getAccountDetailsByIdAccount(idAccount);
+    public ResponseEntity<Optional<AccountDto>> getUserDetails(@PathVariable Long idAccount){
+        Optional<AccountDto> account = accountService.getAccountDetailsByIdAccount(idAccount);
         if (account.isPresent()) {
             return new ResponseEntity<>(account,HttpStatus.OK);
         } else {

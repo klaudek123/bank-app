@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { AxiosService } from '../../../../axios.service';
 
 @Component({
   selector: 'app-header',
@@ -12,7 +12,7 @@ export class HeaderComponent {
   user: any = { name: '', lastname: '' }; // Przykładowe dane użytkownika
 
   
-  constructor(private router: Router, private http: HttpClient){ }
+  constructor(private router: Router, private axiosService: AxiosService){ }
 
   ngOnInit(): void {
      // Pobierz identyfikator konta z localStorage
@@ -20,15 +20,21 @@ export class HeaderComponent {
      console.log("idAccount = "+idAccount); // działa już
      if (idAccount) {
        // Wyślij żądanie do serwera, aby pobrać dane użytkownika na podstawie identyfikatora konta
-       this.http.get<any>(`http://localhost:8080/users/${idAccount}`)
-         .subscribe(
+       this.axiosService.request('GET', `http://localhost:8080/users/${idAccount}`, {})
+        .then(
            (response) => {
+            console.log(response);
              // Ustaw dane użytkownika w komponencie nagłówka
-             this.user.name = response.firstname;
-             this.user.lastname = response.lastname;
+             this.user.name = response.data.firstname;
+             this.user.lastname = response.data.lastname;
            },
            (error) => {
-             console.error('Błąd podczas pobierania danych użytkownika.', error);
+            if (error.response.status === 401) {
+              this.axiosService.setAuthToken(null);
+            } else {
+                this.user.name = error.response.code;
+            }
+            console.error('Błąd podczas pobierania danych użytkownika.', error);
            }
          );
      }

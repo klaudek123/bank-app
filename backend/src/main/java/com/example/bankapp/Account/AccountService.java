@@ -1,8 +1,9 @@
 package com.example.bankapp.Account;
 
-import com.example.bankapp.User.User;
+import com.example.bankapp.Config.AppException;
+import com.example.bankapp.Mappers.AccountMapper;
 import com.example.bankapp.User.UserRegisterDTO;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -10,9 +11,11 @@ import java.util.Optional;
 @Service
 public class AccountService {
     private final AccountRepository accountRepository;
+    private final AccountMapper accountMapper;
 
-    public AccountService(AccountRepository accountRepository) {
+    public AccountService(AccountRepository accountRepository, AccountMapper accountMapper) {
         this.accountRepository = accountRepository;
+        this.accountMapper = accountMapper;
     }
 
     public Account generateAccount(UserRegisterDTO userRegisterDTO) {
@@ -44,7 +47,15 @@ public class AccountService {
         return accountRepository.getIdUserByIdAccount(idAccount);
     }
 
-    public Optional<Account> getAccountDetailsByIdAccount(Long idAccount) {
-        return accountRepository.findById(idAccount);
+    public Optional<AccountDto> getAccountDetailsByIdAccount(Long idAccount) {
+        Optional<Account> accountOptional = accountRepository.findById(idAccount);
+        return accountOptional.map(accountMapper::accountToAccountDto);
+    }
+
+
+    public AuthDto findByIdAccount(String idAcc) {
+        Account acc = accountRepository.findById(Long.valueOf(idAcc))
+                .orElseThrow(() -> new AppException("Unknown user", HttpStatus.NOT_FOUND));
+        return new AuthDto(acc.getIdAccount(), null);
     }
 }
