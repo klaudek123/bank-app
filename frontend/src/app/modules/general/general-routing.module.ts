@@ -5,7 +5,7 @@ import { GeneralDashboardComponent } from './components/general-dashboard/genera
 import { CreditComponent } from './components/credit/credit.component';
 import { AccountComponent } from './components/account/account.component';
 import { InvestmentComponent } from './components/investment/investment.component';
-import { CurrencyComponent } from './components/currency/currency.component';
+import { TransferComponent } from './components/transfer/transfer.component';
 import { CounterpartyComponent } from './components/counterparty/counterparty.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { NewsComponent } from './components/news/news.component';
@@ -14,9 +14,9 @@ const routes: Routes = [
   { path: '', component: GeneralDashboardComponent, children: [
     {path: 'desktop', component: DesktopComponent},
     {path: 'account', component: AccountComponent},
+    {path: 'transfer', component: TransferComponent},
     {path: 'investment', component: InvestmentComponent},
     {path: 'credit', component: CreditComponent},
-    {path: 'currency', component: CurrencyComponent},
     {path: 'counterparty', component: CounterpartyComponent},
     {path: 'settings', component: SettingsComponent},
     {path: 'news', component: NewsComponent},

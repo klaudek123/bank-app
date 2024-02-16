@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { AxiosService } from '../../../../axios.service';
+import { AxiosService } from '../../../../services/axios.service';
 
 interface AccountInfo {
   owner: string;
@@ -41,6 +41,7 @@ export class DesktopComponent {
       this.axiosService.request('GET', `http://localhost:8080/accounts/${idAccount}`, {})
         .then(
           (response) => {
+            console.log(response);
             // Ustaw dane użytkownika w komponencie nagłówka
             this.testAccountInfo.accountBalance = response.data.balance;
             this.testAccountInfo.accountNumer = response.data.number;

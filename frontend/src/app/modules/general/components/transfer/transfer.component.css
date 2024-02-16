@@ -1,0 +1,42 @@
+.container {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .amount-inputs {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .amount-inputs div {
+    flex: 1;
+  }
+  
+.container label {
+    font-weight: bold;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.container input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+.container button {
+    background-color: #4c65af;
+    border: none;
+    color: white;
+    padding: 12px 24px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.container button:hover {
+    background-color: #4548a0;
+}

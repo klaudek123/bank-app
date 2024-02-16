@@ -6,6 +6,7 @@ import com.example.bankapp.User.UserRegisterDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 @Service
@@ -22,7 +23,7 @@ public class AccountService {
         Account account = new Account();
         account.setNumber(generateUserNumber());
         account.setPassword(userRegisterDTO.getPassword());
-        account.setBalance(1000L); // Assuming initial balance is 0
+        account.setBalance(BigDecimal.valueOf(1000)); // Assuming initial balance is 0
         account.setStatus("1"); // Assuming account is active by default
         account.setIdUser(userRegisterDTO.getPersonalId()); // Assuming idUser is a String
         accountRepository.save(account);
@@ -57,5 +58,38 @@ public class AccountService {
         Account acc = accountRepository.findById(Long.valueOf(idAcc))
                 .orElseThrow(() -> new AppException("Unknown user", HttpStatus.NOT_FOUND));
         return new AuthDto(acc.getIdAccount(), null);
+    }
+
+    public long getNumberByIdAccount(long idAccount) {
+        return accountRepository.getNumberByIdAccount(idAccount);
+    }
+
+    public long getIdAccountByNumber(long recipient) {
+        return accountRepository.getIdAccountByNumber(recipient);
+    }
+
+    public void transferFunds(long idAccountSender, long idAccountRecipient, BigDecimal amount) {
+        Optional<Account> senderOptional = accountRepository.findById(idAccountSender);
+        Optional<Account> recipientOptional = accountRepository.findById(idAccountRecipient);
+
+        if (senderOptional.isPresent() && recipientOptional.isPresent()) {
+            Account senderAccount = senderOptional.get();
+            Account recipientAccount = recipientOptional.get();
+
+            BigDecimal senderBalance = senderAccount.getBalance();
+            BigDecimal recipientBalance = recipientAccount.getBalance();
+
+            // Odjęcie kwoty od konta sendera
+            senderBalance = senderBalance.subtract(amount);
+            // Dodanie kwoty do konta recipienta
+            recipientBalance = recipientBalance.add(amount);
+
+            senderAccount.setBalance(senderBalance);
+            recipientAccount.setBalance(recipientBalance);
+
+            // Zapisz zmiany w bazie danych
+            accountRepository.save(senderAccount);
+            accountRepository.save(recipientAccount);
+        }
     }
 }

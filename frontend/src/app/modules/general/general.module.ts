@@ -9,10 +9,14 @@ import { AccountComponent } from './components/account/account.component';
 import { CreditComponent } from './components/credit/credit.component';
 import { InvestmentComponent } from './components/investment/investment.component';
 import { GeneralDashboardComponent } from './components/general-dashboard/general-dashboard.component';
-import { CurrencyComponent } from './components/currency/currency.component';
+import { TransferComponent } from './components/transfer/transfer.component';
 import { CounterpartyComponent } from './components/counterparty/counterparty.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { NewsComponent } from './components/news/news.component';
+import { FormsModule } from '@angular/forms';
+import { AppRoutingModule } from '../../app-routing.module';
+import { HttpClientModule } from '@angular/common/http';
+import { BrowserModule } from '@angular/platform-browser';
 
 
 @NgModule({
@@ -24,14 +28,15 @@ import { NewsComponent } from './components/news/news.component';
     CreditComponent,
     InvestmentComponent,
     GeneralDashboardComponent,
-    CurrencyComponent,
+    TransferComponent,
     CounterpartyComponent,
     SettingsComponent,
     NewsComponent
   ],
   imports: [
     CommonModule,
-    GeneralRoutingModule
+    GeneralRoutingModule,
+    FormsModule
   ]
 })
 export class GeneralModule { }

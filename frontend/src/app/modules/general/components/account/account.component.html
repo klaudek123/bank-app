@@ -1,1 +1,27 @@
-<p>account works!</p>
+<div class="transfer-history">
+  <div class="transfer-history-header">
+    <h2>Historia Transakcji</h2>
+  </div>
+  <div class="transfer-history-table">
+    <table>
+      <thead>
+        <tr>
+          <th>Data</th>
+          <th>Nadawca</th>
+          <th>Odbiorca</th>
+          <th>Tytułem</th>
+          <th>Kwota</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let transfer of transfers">
+          <td>{{ transfer.date }}</td>
+          <td>{{ transfer.sender }}</td>
+          <td>{{ transfer.recipient }}</td>
+          <td>{{ transfer.title }}</td>
+          <td>{{ transfer.amount }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

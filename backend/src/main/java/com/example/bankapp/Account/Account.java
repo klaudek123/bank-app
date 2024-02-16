@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -22,7 +23,7 @@ public class Account {
 
     private Long number;
     private String password;
-    private Long balance;
+    private BigDecimal balance;
     @Column(columnDefinition = "DATE")
     private LocalDateTime dateOfCreation;
     private String status; // 1 = active, 0 = unactive

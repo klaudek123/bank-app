@@ -19,4 +19,11 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     @Query("SELECT a.idUser FROM Account a WHERE a.idAccount = :idAccount")
     Long getIdUserByIdAccount(@Param("idAccount") Long idAccount);
 
+    @Query("SELECT a.number FROM Account a WHERE a.idAccount = :idAccount")
+    Long getNumberByIdAccount(@Param("idAccount") Long idAccount);
+
+
+    @Query("SELECT a.idAccount FROM Account a WHERE a.number = :number")
+    Long getIdAccountByNumber(@Param("number") Long number);
+
 }

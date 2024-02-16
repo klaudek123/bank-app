@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { AxiosService } from '../../../../axios.service';
+import { AxiosService } from '../../../../services/axios.service';
 
 @Component({
   selector: 'app-header',
@@ -50,6 +50,7 @@ export class HeaderComponent {
 
   logout(): void {
     // Tutaj można dodać logikę wylogowania użytkownika
+    localStorage.clear();
     this.router.navigate(['/login']);
   }
 }

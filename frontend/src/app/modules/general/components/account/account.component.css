@@ -1,0 +1,39 @@
+.transfer-history {
+  margin-top: 20px;
+  background-color: #fff;
+  padding: 1%; /* Responsywne marginesy */
+  border-radius: 8px; /* Responsywne zaokrąglenie */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  height: 90%;
+}
+
+.transfer-history-table {
+  overflow-y: auto; /* Dodaj pionowy pasek przewijania */
+  max-height: 80%; /* Ustaw maksymalną wysokość */
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fbfbfb;
+}
+
+table th,
+table td {
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
+}
+
+table th {
+  background-color: #f2f2f2;
+}
+
+table tr:hover {
+  background-color: #e6e0e0;
+}
+
+thead {
+  position: sticky; /* Ustaw nagłówki tabeli jako sticky */
+  top: 0; /* Przylep nagłówki do góry */
+  z-index: 1; /* Zapewnij, że nagłówki będą na wierzchu */
+}

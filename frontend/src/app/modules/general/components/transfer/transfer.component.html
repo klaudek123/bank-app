@@ -1,0 +1,21 @@
+<div class="container">
+  <div>
+    <label>Odbiorca:</label>
+    <input type="number" [(ngModel)]="recipient" name="recipient" required>
+  </div>
+  <div>
+    <label>Tytuł:</label>
+    <input type="text" [(ngModel)]="title" name="title" required>
+  </div>
+  <div class="amount-inputs">
+    <div>
+      <label>Złotówki:</label>
+      <input type="number" name="amountZloty" [(ngModel)]="amountZloty" required>
+    </div>
+    <div>
+      <label>Grosze:</label>
+      <input type="number" name="amountGrosz" [(ngModel)]="amountGrosz" required>
+    </div>
+  </div>
+  <button type="submit" (click)="onSubmit()">Wykonaj przelew</button>
+</div>

@@ -1,7 +1,7 @@
 // login.component.ts
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { AxiosService } from '../../axios.service';
+import { AxiosService } from '../../services/axios.service';
 
 @Component({
   selector: 'app-login',
@@ -34,12 +34,13 @@ export class LoginComponent {
       if (response && response.status === 200) {
         localStorage.setItem('idAccount', this.idAccount);
         this.axiosService.setAuthToken(response.data.token); // Zapisanie tokena autoryzacyjnego
-        window.alert(response.data);
+        console.log(response.data);
+        // window.alert("Udało się zalogować!");
         this.router.navigateByUrl('/general'); // Przekierowanie po pomyślnym zalogowaniu
       } else {
         // Obsługa przypadku, gdy logowanie się nie powiodło
         if(response){
-          // window.alert(response.message);
+          window.alert(response.message);
         }
         // Możesz wyświetlić komunikat dla użytkownika lub podjąć inne działania w przypadku niepowodzenia logowania
       }
