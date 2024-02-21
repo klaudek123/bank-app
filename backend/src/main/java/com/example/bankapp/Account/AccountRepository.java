@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface AccountRepository extends JpaRepository<Account, Long> {
 
     @Query(value = "SELECT MAX(number) FROM Account")
-    long findTopByNumber();
+    Long findTopByNumber();
 
     Optional<Object> findByIdAccountAndPassword(Long idAccount, String password);
 

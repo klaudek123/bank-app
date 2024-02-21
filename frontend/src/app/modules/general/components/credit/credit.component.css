@@ -1,0 +1,63 @@
+.credit-form {
+    margin-top: 20px;
+    background-color: #fff;
+    padding: 1%; /* Responsywne marginesy */
+    border-radius: 8px; /* Responsywne zaokrąglenie */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    height: 90%;
+}
+
+.credit-form h2 {
+    margin-top: 0;
+    padding-top: 20px;
+    font-size: 24px;
+    text-align: center;
+}
+
+.credit-form form {
+    padding: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.form-control {
+    width: 100%;
+}
+
+span {
+    display: block;
+    margin-top: 5px;
+    font-size: 14px;
+}
+
+button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.date-group {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .date-group .form-group {
+    flex: 1;
+  }

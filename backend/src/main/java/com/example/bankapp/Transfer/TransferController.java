@@ -51,12 +51,12 @@ public class TransferController {
     }
 
     @GetMapping("/sent")
-    public ResponseEntity<Optional<Transfer>> getAllBySender(@RequestParam("sender") long idAccount){
+    public ResponseEntity<Optional<Transfer>> getAllBySender(@RequestParam("sender") Long idAccount){
         return transferService.getTransfersBySender(idAccount);
     }
 
     @GetMapping("/received")
-    public ResponseEntity<Optional<Transfer>> getAllByRecipient(@RequestParam("recipient") long idAccount){
+    public ResponseEntity<Optional<Transfer>> getAllByRecipient(@RequestParam("recipient") Long idAccount){
         return transferService.getTransfersByRecipient(idAccount);
     }
 

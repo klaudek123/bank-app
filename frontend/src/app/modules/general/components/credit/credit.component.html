@@ -1,1 +1,28 @@
-<p>credit works!</p>
+<div class="credit-form" *ngIf="loanForm">
+    <h2>Pożyczka</h2>
+    <form [formGroup]="loanForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+            <label for="loanAmount">Kwota pożyczki</label>
+            <input type="range" class="form-control" id="loanAmount" formControlName="loanAmount"
+                   [min]="minLoanAmount" [max]="maxLoanAmount" step ="1000">
+            <span>{{ loanForm.get('loanAmount')?.value }} ZŁ</span>
+        </div>
+        <div class="form-group">
+            <label for="loanDurationMonths">Czas trwania pożyczki</label>
+            <input type="range" class="form-control" id="loanDurationMonths" formControlName="loanDurationMonths"
+                   [min]="minLoanDurationMonths" [max]="maxLoanDurationMonths" step ="3">
+            <span>{{ loanForm.get('loanDurationMonths')?.value }} miesięcy</span>
+        </div>
+        <div class = "date-group">
+            <div class="form-group">
+                <label for="startDate">Od:</label>
+                <p>{{ loanForm.get('startDate')?.value | date:'dd.MM.yyyy'  }}</p>
+            </div>
+            <div class="form-group">
+                <label for="endDate">Do:</label>
+                <p>{{ loanForm.get('endDate')?.value | date:'dd.MM.yyyy'  }}</p>
+            </div>
+        </div>
+        <button type="submit" [disabled]="!loanForm.valid">Złóż wniosek</button>
+    </form>
+</div>

@@ -33,7 +33,7 @@ table tr:hover {
 }
 
 thead {
-  position: sticky; /* Ustaw nagłówki tabeli jako sticky */
-  top: 0; /* Przylep nagłówki do góry */
-  z-index: 1; /* Zapewnij, że nagłówki będą na wierzchu */
+  position: sticky;
+  top: 0; 
+  z-index: 1;
 }

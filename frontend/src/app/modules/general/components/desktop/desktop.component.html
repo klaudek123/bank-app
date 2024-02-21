@@ -1,20 +1,19 @@
 <div class="content">
   <div class="section">
-    <h2>Saldo rachunku:</h2>
-    <p>{{ testAccountInfo.accountBalance }} PLN</p>
+    <h2>Informacje o rachunku:</h2>
+    <ul>
+      <li>Numer rachunku: {{ accountInfo.accountNumer }} </li>
+      <li>Saldo: {{ accountInfo.accountBalance }} PLN</li>
+    </ul>
+    <p></p>
   </div>
   <div class="section">
     <h2>Lokaty:</h2>
-    <p>{{ testAccountInfo.depositsInPLN }} PLN</p>
+    <p>{{ accountInfo.deposit }} PLN</p>
   </div>
   <div class="section">
-    <h2>Informacje o rachunku:</h2>
-    <ul>
-      <!-- <li>Właściciel: {{ testAccountInfo.owner }}</li> -->
-      <!-- <li>Nazwa rachunku: {{ testAccountInfo.accountName }}</li> -->
-      <li>Numer rachunku: {{testAccountInfo.accountNumer}} </li>
-      <!-- <li>Rodzaj waluty: {{ testAccountInfo.currency }}</li> -->
-      <!-- Dodaj inne pola związane z informacjami o rachunku -->
-    </ul>
+    <h2>Pożyczki</h2>
+    <p>{{ accountInfo.credit }} PLN</p>
+    
   </div>
 </div>

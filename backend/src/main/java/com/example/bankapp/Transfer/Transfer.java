@@ -18,14 +18,14 @@ import java.time.LocalDateTime;
 public class Transfer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long idTransfer;
-    private long sender;
-    private long recipient;
+    private Long idTransfer;
+    private Long sender;
+    private Long recipient;
     private String title;
     @Column(columnDefinition = "DATESTAMP")
     private String date;
     private BigDecimal amount;
-    private long idAccount;
+    private Long idAccount;
 
 
     @PrePersist

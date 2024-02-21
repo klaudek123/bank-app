@@ -34,7 +34,7 @@ export class TransferComponent {
       return;
     }
 
-  const amount = this.amountZloty + this.amountGrosz / 100; // Złóż wartości złotówek i groszy w jedną
+  const amount = this.amountZloty + this.amountGrosz / 100;
 
 
   const transferDTO = {

@@ -7,7 +7,8 @@ interface AccountInfo {
   accountName: string;
   accountNumer: string;
   currency: string;
-  depositsInPLN: number;
+  deposit: number;
+  credit: number;
   accountBalance: number;
   // Inne pola związane z informacjami o rachunku
 }
@@ -19,14 +20,15 @@ interface AccountInfo {
 })
 export class DesktopComponent {
   //@Input() accountInfo: AccountInfo;
-  testAccountInfo: AccountInfo = {
-    owner: 'John Doe',
-    accountName: 'Main Account',
-    accountNumer: '61109010140000071219812874',
-    currency: 'USD',
-    depositsInPLN: NaN,
-    accountBalance: 12000
-    // Tutaj można przypisać inne testowe wartości dla pól AccountInfo
+  accountInfo: AccountInfo = {
+    owner: 'NaN',
+    accountName: 'NaN',
+    accountNumer: 'NaN',
+    currency: 'NaN',
+    deposit: NaN,
+    credit: NaN,
+    accountBalance: NaN
+
   };
 
   constructor(private router: Router, private axiosService : AxiosService){ }
@@ -43,15 +45,15 @@ export class DesktopComponent {
           (response) => {
             console.log(response);
             // Ustaw dane użytkownika w komponencie nagłówka
-            this.testAccountInfo.accountBalance = response.data.balance;
-            this.testAccountInfo.accountNumer = response.data.number;
+            this.accountInfo.accountBalance = response.data.balance;
+            this.accountInfo.accountNumer = response.data.number;
           }
         ).catch(
           (error) => {
             if (error.response.status === 401) {
               this.axiosService.setAuthToken(null);
             } else {
-                this.testAccountInfo.owner = error.response.code;
+                this.accountInfo.owner = error.response.code;
             }
             console.error('Błąd podczas pobierania danych użytkownika.', error);
           }

@@ -1,6 +1,12 @@
 .container {
     display: flex;
     flex-direction: column;
+    margin-top: 20px;
+    background-color: #fff;
+    padding: 1%; /* Responsywne marginesy */
+    border-radius: 8px; /* Responsywne zaokrąglenie */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    height: 90%;
   }
   
   .amount-inputs {
@@ -10,6 +16,7 @@
   
   .amount-inputs div {
     flex: 1;
+    
   }
   
 .container label {
@@ -24,11 +31,12 @@
     margin-bottom: 20px;
     border-radius: 5px;
     border: 1px solid #ccc;
+    background-color: #f7f7f7;
     box-sizing: border-box;
 }
 
 .container button {
-    background-color: #4c65af;
+    background-color: #007bff;
     border: none;
     color: white;
     padding: 12px 24px;
@@ -38,5 +46,5 @@
 }
 
 .container button:hover {
-    background-color: #4548a0;
+    background-color: #0056b3;
 }

@@ -20,11 +20,11 @@ public class TransferService {
     }
 
     public List<Transfer> getTransfersByIdAccount(Long idAccount) {
-        return transferRepository.findByIdAccount(idAccount);
+        return transferRepository.findByIdAccountOrderByDateDesc(idAccount);
     }
 
 
-    public ResponseEntity<Optional<Transfer>> getTransfersBySender(long idAccount) {
+    public ResponseEntity<Optional<Transfer>> getTransfersBySender(Long idAccount) {
         Optional<Transfer> transfers =  transferRepository.findBySenderAndIdAccount(
                 accountService.getNumberByIdAccount(idAccount),
                 idAccount);
@@ -36,7 +36,7 @@ public class TransferService {
         }
     }
 
-    public ResponseEntity<Optional<Transfer>> getTransfersByRecipient(long idAccount) {
+    public ResponseEntity<Optional<Transfer>> getTransfersByRecipient(Long idAccount) {
         Optional<Transfer> transfers =  transferRepository.findByRecipientAndIdAccount(
                 accountService.getNumberByIdAccount(idAccount),
                 idAccount);

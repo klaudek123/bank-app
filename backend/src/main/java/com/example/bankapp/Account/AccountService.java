@@ -34,7 +34,7 @@ public class AccountService {
     private Long generateUserNumber() {
         long numberOfAccounts = accountRepository.count(); // Pobierz liczbę kont w bazie danych
         if (numberOfAccounts > 0) {
-            long maxNumber = accountRepository.findTopByNumber(); // Pobierz maksymalny numer konta
+            Long maxNumber = accountRepository.findTopByNumber(); // Pobierz maksymalny numer konta
             return maxNumber + 1; // Zwróć maxNumber + 1
         }
         return 1000000001L; // Jeśli nie ma kont w bazie danych, zwróć 1000001L
@@ -60,15 +60,15 @@ public class AccountService {
         return new AuthDto(acc.getIdAccount(), null);
     }
 
-    public long getNumberByIdAccount(long idAccount) {
+    public Long getNumberByIdAccount(Long idAccount) {
         return accountRepository.getNumberByIdAccount(idAccount);
     }
 
-    public long getIdAccountByNumber(long recipient) {
+    public Long getIdAccountByNumber(Long recipient) {
         return accountRepository.getIdAccountByNumber(recipient);
     }
 
-    public void transferFunds(long idAccountSender, long idAccountRecipient, BigDecimal amount) {
+    public void transferFunds(Long idAccountSender, Long idAccountRecipient, BigDecimal amount) {
         Optional<Account> senderOptional = accountRepository.findById(idAccountSender);
         Optional<Account> recipientOptional = accountRepository.findById(idAccountRecipient);
 
@@ -90,6 +90,20 @@ public class AccountService {
             // Zapisz zmiany w bazie danych
             accountRepository.save(senderAccount);
             accountRepository.save(recipientAccount);
+        }
+    }
+    
+    public void makeLoan(Long idAccount, BigDecimal amount) {
+        Optional<Account> accountOptional = accountRepository.findById(idAccount);
+        
+        if(accountOptional.isPresent()){
+            Account account = accountOptional.get();
+            
+            BigDecimal balance = account.getBalance();
+
+            account.setBalance(balance.add(amount));
+
+            accountRepository.save(account);
         }
     }
 }

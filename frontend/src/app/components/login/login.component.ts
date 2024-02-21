@@ -37,16 +37,20 @@ export class LoginComponent {
         console.log(response.data);
         // window.alert("Udało się zalogować!");
         this.router.navigateByUrl('/general'); // Przekierowanie po pomyślnym zalogowaniu
-      } else {
-        // Obsługa przypadku, gdy logowanie się nie powiodło
-        if(response){
-          window.alert(response.message);
-        }
-        // Możesz wyświetlić komunikat dla użytkownika lub podjąć inne działania w przypadku niepowodzenia logowania
+      } 
+      else if(response && response.status === 401) {
+        this.axiosService.setAuthToken(null);
+        window.alert("Wystąpił nieoczekiwany błąd. Proszę zaloguj się ponownie.");
+        // // Obsługa przypadku, gdy logowanie się nie powiodło
+        // if(response){
+        //   window.alert(response.message);
+        // }
+        // // Możesz wyświetlić komunikat dla użytkownika lub podjąć inne działania w przypadku niepowodzenia logowania
       }
     }).catch(
       error => {
         window.alert('Błąd podczas logowania.'+ error);
+        this.axiosService.setAuthToken(null);
         // Handle login error (display error message to user, etc.)
       }
       );

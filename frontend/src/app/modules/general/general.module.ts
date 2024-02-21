@@ -17,6 +17,7 @@ import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from '../../app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -36,7 +37,8 @@ import { BrowserModule } from '@angular/platform-browser';
   imports: [
     CommonModule,
     GeneralRoutingModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule 
   ]
 })
 export class GeneralModule { }
