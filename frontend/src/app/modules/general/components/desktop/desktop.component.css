@@ -1,13 +1,13 @@
 .content {
-    max-height: 100%;
-    padding: 1.8%; /* Responsywne marginesy */
+    max-height: 90%;
+    margin-top: 20px;
     border-radius: 2%; /* Responsywne zaokrąglenie */
   }
   
   .section {
     margin-bottom: 1%; /* Responsywne marginesy */
     background-color: #fff;
-    padding: 1%; /* Responsywne marginesy */
+    padding: 2%; /* Responsywne marginesy */
     border-radius: 8px; /* Responsywne zaokrąglenie */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }

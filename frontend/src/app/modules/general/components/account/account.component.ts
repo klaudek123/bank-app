@@ -8,8 +8,9 @@ import { AxiosService } from '../../../../services/axios.service';
   styleUrl: './account.component.css'
 })
 export class AccountComponent {
-  //#TODO tablica dla obiektów typu transfer.model
+
   transfers: Transfer[] = []; 
+
 
 
   constructor(private axiosService: AxiosService) { }
@@ -24,7 +25,7 @@ export class AccountComponent {
         .then(
           (response) => {
             console.log(response);
-            //#TODO przypisywanie do tablicy obiektów wartości
+            // przypisywanie do tablicy obiektów wartości
             if (Array.isArray(response.data)) {
               // Jeśli tak, przypisz odpowiedź do tablicy transfers
               this.transfers = response.data;

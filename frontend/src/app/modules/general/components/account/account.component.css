@@ -1,15 +1,22 @@
 .transfer-history {
   margin-top: 20px;
   background-color: #fff;
-  padding: 1%; /* Responsywne marginesy */
+  padding: 2%; /* Responsywne marginesy */
   border-radius: 8px; /* Responsywne zaokrąglenie */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   height: 90%;
 }
 
+.transfer-history h2 {
+  margin-top: 0;
+  padding-top: 20px;
+  font-size: 24px;
+  text-align: center;
+}
+
 .transfer-history-table {
   overflow-y: auto; /* Dodaj pionowy pasek przewijania */
-  max-height: 80%; /* Ustaw maksymalną wysokość */
+  max-height: 85%; /* Ustaw maksymalną wysokość */
 }
 
 table {

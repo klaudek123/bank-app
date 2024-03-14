@@ -2,7 +2,6 @@ package com.example.bankapp.User;
 
 import com.example.bankapp.Account.Account;
 import com.example.bankapp.Account.AccountService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +11,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/users")
-//@CrossOrigin(origins = "*") // Pozwala na dostęp z dowolnego źródła
+
 public class UserController {
     private final UserRepository userRepository;
     private final UserService userService;
@@ -26,7 +25,7 @@ public class UserController {
 
     @GetMapping("")
     public List<User> getUsers(){
-        return userService.getAllUsers();
+        return userRepository.findAll();
     }
 
     @PostMapping()
@@ -49,11 +48,19 @@ public class UserController {
 
     @GetMapping("/{idAccount}")
     public ResponseEntity<Optional<User>> getUserDetails(@PathVariable Long idAccount){
-        Optional<User> user = userService.getUserDetailsByPersonalId(accountService.getIdUserByIdAccount(idAccount));
-        if (user.isPresent()) {
-            return new ResponseEntity<>(user,HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        try {
+            if (idAccount == null) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+
+            Optional<User> user = userService.getUserDetailsByPersonalId(accountService.getIdUserByIdAccount(idAccount));
+            if (user.isPresent()) {
+                return new ResponseEntity<>(user, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

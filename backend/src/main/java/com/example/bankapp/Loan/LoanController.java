@@ -1,11 +1,11 @@
 package com.example.bankapp.Loan;
 
+import com.example.bankapp.Mappers.LoanMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/loans")
@@ -13,20 +13,34 @@ public class LoanController {
     private final LoanService loanService;
     private final LoanRepository loanRepository;
 
-    public LoanController(LoanService loanService, LoanRepository loanRepository) {
+
+
+    public LoanController(LoanService loanService, LoanRepository loanRepository, LoanMapper loanMapper) {
         this.loanService = loanService;
         this.loanRepository = loanRepository;
+
     }
 
 
     @PostMapping()
     public ResponseEntity<String> createLoan(@RequestBody Loan loan){
-       if (!loanRepository.existsByAccountIdAndStatus(loan.getIdAccount(), "1")) {
+       if (!loanRepository.existsByIdAccountAndStatus(loan.getIdAccount(), "1")) {
            loanService.createLoan(loan);
            return ResponseEntity.ok("Pożyczka została udzielona!");
        } else {
            return ResponseEntity.status(HttpStatus.CONFLICT).body("Użytkownik posiada już pożyczkę!");
        }
+    }
+
+    @GetMapping("/{idAccount}")
+    public ResponseEntity<Optional<LoanDto>> getLoanDetails(@PathVariable Long idAccount){
+        Optional<LoanDto> loan = loanService.getLoanDetailsByIdAccount(idAccount);
+
+        if (loan.isPresent()) {
+            return new ResponseEntity<>(loan,HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
 

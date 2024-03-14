@@ -26,7 +26,7 @@ public class Account {
     private BigDecimal balance;
     @Column(columnDefinition = "DATE")
     private LocalDateTime dateOfCreation;
-    private String status; // 1 = active, 0 = unactive
+    private String status; // 1 = active, 0 = inactive
     private Long idUser;
 
     @PrePersist

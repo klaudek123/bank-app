@@ -1,1 +1,38 @@
-<p>investment works!</p>
+<div class="investment-form" *ngIf="investmentForm">
+    <h2>Inwestycja</h2>
+    <form [formGroup]="investmentForm" (ngSubmit)="onSubmit()" novalidate>
+        <div class="form-group">
+            <label for="type">Typ:</label>
+            <select class="form-control" id="type" formControlName="type">
+                <option value="FUND">Fundusz</option>
+                <option value="GOLD">Złoto</option>
+                <option value="SILVER">Srebro</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="amount">Kwota ( {{ minAmount }} - {{ maxAmount }} zł):</label>
+            <input type="number" class="form-control" id="amount" formControlName="amount">
+        </div>
+        <div class="form-group">
+            <label for="interestRate">Średnia przewidywana roczna stopa zwrotu:</label>
+            <span style="padding: 3px;">{{ investmentForm.get('interestRate')?.value }} %</span>
+        </div>
+        <div class="form-group">
+            <label for="durationMonths">Czas trwania:</label>
+            <input type="range" class="form-control" id="durationMonths" formControlName="durationMonths"
+                   [min]="minDurationMonths" [max]="maxDurationMonths" step="3">
+            <span>{{ investmentForm.get('durationMonths')?.value }} miesięcy</span>
+        </div>
+        <div class = "date-group">
+          <div class="form-group">
+              <label for="startDate">Data rozpoczęcia:</label>
+              <p>{{ investmentForm.get('startDate')?.value | date:'dd.MM.yyyy'  }}</p>
+          </div>
+          <div class="form-group">
+              <label for="endDate">Data zakończenia:</label>
+              <p>{{ investmentForm.get('endDate')?.value | date:'dd.MM.yyyy'  }}</p>
+          </div>
+        </div>
+        <button type="submit">Dodaj Inwestycję</button>
+    </form>
+</div>

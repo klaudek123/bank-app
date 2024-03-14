@@ -17,7 +17,6 @@ public class Loan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idLoan;
-    private String name;
     private BigDecimal amount;
     private BigDecimal interestRate;
     private LocalDateTime startDate;
@@ -28,7 +27,7 @@ public class Loan {
 
     @PrePersist
     public void prePresist(){
-        this.name = "loan" + this.idLoan;
+//        this.name = "loan" + this.idLoan;
 
         if(this.endDate.isAfter(this.startDate) && LocalDateTime.now().isBefore(endDate)){
             this.status = "1";

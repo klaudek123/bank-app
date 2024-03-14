@@ -1,0 +1,72 @@
+.investment-form {
+    margin-top: 20px;
+    background-color: #fff;
+    padding: 1%; /* Responsywne marginesy */
+    border-radius: 8px; /* Responsywne zaokrąglenie */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    height: 90%;
+  }
+  
+  .investment-form h2 {
+    margin-top: 0;
+    padding-top: 10px;
+    font-size: 24px;
+    text-align: center;
+  }
+  
+  .investment-form form {
+    padding: 10px;
+  }
+  
+  .form-group {
+    margin-bottom: 10px;
+  }
+  
+  #type {
+    width: 100%;
+  }
+
+  label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  .form-control {
+    width: calc(100% - 20px); /* Dodatkowe 20px dla marginesu wewnętrznego */
+    padding: 10px;
+    border: 1px solid #ccc;
+    background-color: #f7f7f7;
+    border-radius: 5px;
+  }
+  
+  span {
+    display: block;
+    margin-top: 5px;
+    font-size: 14px;
+  }
+  
+  button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  
+  .date-group {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .date-group .form-group {
+    flex: 1;
+  }
+  

@@ -15,6 +15,7 @@ export class LoginComponent {
   constructor(private router: Router, private axiosService: AxiosService) {}
 
   handleLoginSubmit(): void {
+    localStorage.clear();
     if (!this.idAccount) {
       window.alert("Numer Klienta jest pusty");
       return;

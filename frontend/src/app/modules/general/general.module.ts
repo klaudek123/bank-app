@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 
 import { GeneralRoutingModule } from './general-routing.module';
 import { DesktopComponent } from './components/desktop/desktop.component';
@@ -14,9 +14,6 @@ import { CounterpartyComponent } from './components/counterparty/counterparty.co
 import { SettingsComponent } from './components/settings/settings.component';
 import { NewsComponent } from './components/news/news.component';
 import { FormsModule } from '@angular/forms';
-import { AppRoutingModule } from '../../app-routing.module';
-import { HttpClientModule } from '@angular/common/http';
-import { BrowserModule } from '@angular/platform-browser';
 import { ReactiveFormsModule } from '@angular/forms';
 
 
@@ -39,6 +36,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     GeneralRoutingModule,
     FormsModule,
     ReactiveFormsModule 
-  ]
+  ],
+  providers: [DatePipe] // Dodaj DatePipe do tablicy providers
 })
 export class GeneralModule { }

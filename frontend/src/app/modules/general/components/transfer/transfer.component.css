@@ -1,12 +1,18 @@
-.container {
+.transfer-form {
     display: flex;
     flex-direction: column;
     margin-top: 20px;
     background-color: #fff;
-    padding: 1%; /* Responsywne marginesy */
+    padding: 2%; /* Responsywne marginesy */
     border-radius: 8px; /* Responsywne zaokrąglenie */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     height: 90%;
+  }
+  .transfer-form h2 {
+    margin-top: 0;
+    padding-top: 10px;
+    font-size: 24px;
+    text-align: center;
   }
   
   .amount-inputs {
@@ -19,13 +25,13 @@
     
   }
   
-.container label {
+.transfer-form label {
     font-weight: bold;
     margin-bottom: 8px;
     display: block;
 }
 
-.container input {
+.transfer-form input {
     width: 100%;
     padding: 10px;
     margin-bottom: 20px;
@@ -35,7 +41,7 @@
     box-sizing: border-box;
 }
 
-.container button {
+.transfer-form button {
     background-color: #007bff;
     border: none;
     color: white;
@@ -45,6 +51,6 @@
     cursor: pointer;
 }
 
-.container button:hover {
+.transfer-form button:hover {
     background-color: #0056b3;
 }

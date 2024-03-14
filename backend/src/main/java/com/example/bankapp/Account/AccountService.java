@@ -1,6 +1,7 @@
 package com.example.bankapp.Account;
 
 import com.example.bankapp.Config.AppException;
+import com.example.bankapp.Investment.Investment;
 import com.example.bankapp.Mappers.AccountMapper;
 import com.example.bankapp.User.UserRegisterDTO;
 import org.springframework.http.HttpStatus;
@@ -102,6 +103,29 @@ public class AccountService {
             BigDecimal balance = account.getBalance();
 
             account.setBalance(balance.add(amount));
+
+            accountRepository.save(account);
+        }
+    }
+
+    public boolean hasSufficientInvestmentBalance(Long idAccount, BigDecimal amount) {
+        Account account = accountRepository.findById(idAccount).orElse(null);
+        if (account == null) {
+            return false;
+        }
+        return account.getBalance().compareTo(amount) >= 0;
+    }
+
+
+    public void makeInvestment(Long idAccount, BigDecimal amount) {
+        Optional<Account> accountOptional = accountRepository.findById(idAccount);
+
+        if(accountOptional.isPresent()){
+            Account account = accountOptional.get();
+
+            BigDecimal balance = account.getBalance();
+
+            account.setBalance(balance.subtract(amount));
 
             accountRepository.save(account);
         }

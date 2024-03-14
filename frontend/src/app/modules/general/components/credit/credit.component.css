@@ -1,7 +1,9 @@
 .credit-form {
+    display: flex;
+    flex-direction: column;
     margin-top: 20px;
     background-color: #fff;
-    padding: 1%; /* Responsywne marginesy */
+    padding: 2%; /* Responsywne marginesy */
     border-radius: 8px; /* Responsywne zaokrąglenie */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     height: 90%;
@@ -14,9 +16,6 @@
     text-align: center;
 }
 
-.credit-form form {
-    padding: 20px;
-}
 
 .form-group {
     margin-bottom: 20px;
