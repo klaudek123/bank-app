@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -25,11 +26,12 @@ public class InvestmentController {
     }
 
     @GetMapping("/{idAccount}")
-    public ResponseEntity<Optional<Investment>> getLoanDetails(@PathVariable Long idAccount){
-        Optional<Investment> investments = investmentService.getInvestmentDetailsByIdAccount(idAccount);
-        if (investments.isPresent()) {
+    public ResponseEntity<List<Investment>> getLoanDetails(@PathVariable Long idAccount){
+        List<Investment> investments = investmentService.getInvestmentDetailsByIdAccount(idAccount);
+        if (!investments.isEmpty()) {
             return new ResponseEntity<>(investments,HttpStatus.OK);
-        } else {
+        }
+        else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }

@@ -60,7 +60,7 @@ export class DesktopComponent {
             console.error('Błąd podczas pobierania danych użytkownika.', error);
           }
         );
-
+        console.log("idAccount = " + idAccount);
         this.axiosService.request('GET', `http://localhost:8080/investments/${idAccount}`, {})
         .then((response) => {
             console.log(response);

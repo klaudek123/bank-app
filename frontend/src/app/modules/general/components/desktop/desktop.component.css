@@ -1,6 +1,6 @@
 .content {
     max-height: 90%;
-    margin-top: 20px;
+    margin-top: 10px;
     border-radius: 2%; /* Responsywne zaokrąglenie */
   }
   
@@ -32,4 +32,52 @@
   }
   
 
+  
+  .investments-section {
+    margin-bottom: 1%;
+    background-color: #fff;
+    padding: 1%;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .investments-section h2 {
+    color: #333;
+    margin-bottom: 1%;
+  }
+  
+  .investments-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fbfbfb;
+  }
+  
+  .investments-table th,
+  .investments-table td {
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .investments-table th {
+    background-color: #f2f2f2;
+  }
+  
+  .investments-table tr:hover {
+    background-color: #e6e0e0;
+  }
+  
+  .investments-table thead {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+  
+  .investments-table tbody {
+    max-height: 300px; /* Adjust this value according to your preference */
+    overflow-y: auto;
+  }
+  
+  .investments-table td {
+    white-space: nowrap; /* Prevent wrapping of text in cells */
+  }
   

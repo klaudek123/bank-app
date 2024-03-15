@@ -7,7 +7,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.time.format.DateTimeFormatter;
 
 @Service
 public class InvestmentService {
@@ -29,10 +32,15 @@ public class InvestmentService {
             investment.setType(investmentDto.getType());
             investment.setAmount(investmentDto.getAmount());
             investment.setInterestRate(investmentDto.getInterestRate());
-//            investment.setStartDate(LocalDateTime.parse(investmentDto.getStartDate().toString())); // Sparsowanie daty
-//            investment.setEndDate(LocalDateTime.parse(investmentDto.getEndDate().toString())); // Sparsowanie daty
-            investment.setStartDate(String.valueOf(investmentDto.getStartDate())); // Sparsowanie daty
-            investment.setEndDate(String.valueOf(investmentDto.getEndDate())); // Sparsowanie daty
+
+            // Parsowanie daty startowej
+            LocalDateTime startDate = LocalDateTime.parse(investmentDto.getStartDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            investment.setStartDate(String.valueOf(startDate));
+
+            // Parsowanie daty końcowej
+            LocalDateTime endDate = LocalDateTime.parse(investmentDto.getEndDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            investment.setEndDate(String.valueOf(endDate));
+
             investment.setStatus(InvestmentStatus.ACTIVE);
             investment.setIdAccount(Long.parseLong(String.valueOf(investmentDto.getIdAccount())));
             investmentRepository.save(investment);
@@ -45,7 +53,7 @@ public class InvestmentService {
 
     }
 
-    public Optional<Investment> getInvestmentDetailsByIdAccount(Long idAccount) {
+    public List<Investment> getInvestmentDetailsByIdAccount(Long idAccount) {
         return investmentRepository.findByIdAccountAndStatus(idAccount, InvestmentStatus.ACTIVE);
     }
 }

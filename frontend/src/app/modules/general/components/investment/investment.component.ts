@@ -73,8 +73,8 @@ export class InvestmentComponent {
         type: this.investmentForm.get('type')?.value,
         amount: this.investmentForm.get('amount')?.value,
         interestRate: this.investmentForm.get('interestRate')?.value,
-        startDate: this.investmentForm.get('startDate')?.value,
-        endDate: this.investmentForm.get('endDate')?.value,
+        startDate: this.formatEndDate(this.investmentForm.get('startDate')?.value),
+        endDate: this.formatEndDate(this.investmentForm.get('endDate')?.value),
         idAccount: localStorage.getItem('idAccount')
       };
       
@@ -100,5 +100,10 @@ export class InvestmentComponent {
       window.alert("Wypełnij wszystkie pola formularzu inwestycji!")
     }
 
+  }
+
+  formatEndDate(date: string): string {
+    const formattedDate = new Date(date);
+    return formattedDate.toISOString().slice(0, 19).replace('T', ' ');
   }
 }
