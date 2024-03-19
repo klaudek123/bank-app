@@ -11,9 +11,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+
 @RestController
 @RequestMapping("/accounts")
-//@CrossOrigin(origins = "*")
 public class AccountController {
     private final AccountRepository accountRepository;
     private final AccountService accountService;
@@ -27,38 +27,37 @@ public class AccountController {
         this.userAuthenticationProvider = userAuthenticationProvider;
     }
 
-
+    // Method to retrieve all accounts
     @GetMapping()
-    public List<Account> getAccounts(){
+    public List<Account> getAccounts() {
         return accountRepository.findAll();
     }
 
+    // Method to authenticate user login
     @PostMapping("/login")
-    public ResponseEntity<Object> login(@RequestBody LoginRequest loginRequest){
+    public ResponseEntity<Object> login(@RequestBody LoginRequest loginRequest) {
         System.out.println(loginRequest.toString());
         Map<String, String> response = new HashMap<>();
-        if(accountService.authenticateLogin(loginRequest.getIdAccount(), loginRequest.getPassword())){
+        if (accountService.authenticateLogin(loginRequest.getIdAccount(), loginRequest.getPassword())) {
             AuthDto authDto = new AuthDto(loginRequest.getIdAccount(), userAuthenticationProvider.createToken(loginRequest.getIdAccount()));
-//            response.put("message", "Zalogowano pomyślnie!");
-//            System.out.println(ResponseEntity.status(HttpStatus.OK).body(response));
-            System.out.printf(authDto.toString());
+
             return ResponseEntity.status(HttpStatus.OK).body(authDto);
-        }else {
+        } else {
             response.put("error", "Błąd logowania. Sprawdź email i hasło.");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         }
     }
 
+    // Method to get account details by account ID
     @GetMapping("/{idAccount}")
-    public ResponseEntity<Optional<AccountDto>> getUserDetails(@PathVariable Long idAccount){
+    public ResponseEntity<Optional<AccountDto>> getUserDetails(@PathVariable Long idAccount) {
         Optional<AccountDto> account = accountService.getAccountDetailsByIdAccount(idAccount);
         if (account.isPresent()) {
-            return new ResponseEntity<>(account,HttpStatus.OK);
+            return new ResponseEntity<>(account, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
 
 
 }

@@ -1,7 +1,7 @@
 package com.example.bankapp.Account;
 
-
 import lombok.*;
+
 
 @AllArgsConstructor
 @NoArgsConstructor

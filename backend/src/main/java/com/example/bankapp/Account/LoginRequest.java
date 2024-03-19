@@ -3,6 +3,7 @@ package com.example.bankapp.Account;
 import lombok.Getter;
 import lombok.Setter;
 
+
 @Getter
 @Setter
 class LoginRequest {

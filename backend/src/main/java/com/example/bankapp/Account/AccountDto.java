@@ -17,5 +17,5 @@ public class AccountDto {
     private Long number;
     private BigDecimal balance;
     private LocalDateTime dateOfCreation;
-    private String status; // 1 = active, 0 = unactive
+    private String status; // 1 = active, 0 = inactive
 }

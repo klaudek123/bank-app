@@ -17,17 +17,20 @@ public class UserController {
     private final UserService userService;
     private final AccountService accountService;
 
+    // Constructor initializing UserController with required repository and services
     public UserController(UserRepository userRepository, UserService userService, AccountService accountService) {
         this.userRepository = userRepository;
         this.userService = userService;
         this.accountService = accountService;
     }
 
+    // Endpoint to retrieve all users
     @GetMapping("")
     public List<User> getUsers(){
         return userRepository.findAll();
     }
 
+    // Endpoint to register a new user
     @PostMapping()
     public ResponseEntity<Long> register(@RequestBody UserRegisterDTO userRegisterDTO) {
         if (!userRepository.existsById(userRegisterDTO.getPersonalId())) {
@@ -46,6 +49,7 @@ public class UserController {
         return new ResponseEntity<>(account.getIdAccount(), HttpStatus.CREATED);
     }
 
+    // Endpoint to retrieve user details by account ID
     @GetMapping("/{idAccount}")
     public ResponseEntity<Optional<User>> getUserDetails(@PathVariable Long idAccount){
         try {

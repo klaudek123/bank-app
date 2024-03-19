@@ -1,6 +1,5 @@
 package com.example.bankapp.Account;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +8,7 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+
 
 @Entity
 @Getter
@@ -30,7 +30,7 @@ public class Account {
     private Long idUser;
 
     @PrePersist
-    public void prePersist(){
+    public void prePersist() {
         this.dateOfCreation = LocalDateTime.now();
     }
 

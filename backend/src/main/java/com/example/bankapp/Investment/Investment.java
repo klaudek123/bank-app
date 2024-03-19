@@ -5,6 +5,7 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 
+
 @Data
 @Entity
 @Table(name = "investment")

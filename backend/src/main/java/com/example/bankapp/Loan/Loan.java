@@ -6,6 +6,7 @@ import lombok.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+
 @Entity
 @Getter
 @Setter
@@ -26,13 +27,12 @@ public class Loan {
 
 
     @PrePersist
-    public void prePresist(){
+    public void prePresist() {
 //        this.name = "loan" + this.idLoan;
 
-        if(this.endDate.isAfter(this.startDate) && LocalDateTime.now().isBefore(endDate)){
+        if (this.endDate.isAfter(this.startDate) && LocalDateTime.now().isBefore(endDate)) {
             this.status = "1";
-        }
-        else{
+        } else {
             this.status = "0";
         }
     }

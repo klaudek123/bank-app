@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+
 @Repository
 public interface LoanRepository extends JpaRepository<Loan, Long> {
     @Query("SELECT COUNT(l) > 0 FROM Loan l WHERE l.idAccount = :idAccount AND l.status = :status")

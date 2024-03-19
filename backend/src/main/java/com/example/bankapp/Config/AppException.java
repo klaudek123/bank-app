@@ -3,6 +3,7 @@ package com.example.bankapp.Config;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
+
 @Getter
 public class AppException extends RuntimeException {
 
