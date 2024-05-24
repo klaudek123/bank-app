@@ -26,15 +26,17 @@ public class UserController {
 
     // Endpoint to retrieve all users
     @GetMapping("")
-    public List<User> getUsers(){
+    public List<User> getUsers() {
         return userRepository.findAll();
     }
 
     // Endpoint to register a new user
     @PostMapping()
-    public ResponseEntity<Long> register(@RequestBody UserRegisterDTO userRegisterDTO) {
+    public ResponseEntity<?> register(@RequestBody UserRegisterDTO userRegisterDTO) {
+        User user;
         if (!userRepository.existsById(userRegisterDTO.getPersonalId())) {
-            User user = new User();
+            // Create a new user
+            user = new User();
             user.setPersonalId(userRegisterDTO.getPersonalId());
             user.setFirstname(userRegisterDTO.getFirstname());
             user.setLastname(userRegisterDTO.getLastname());
@@ -42,16 +44,23 @@ public class UserController {
             user.setEmail(userRegisterDTO.getEmail());
             user.setAddress(userRegisterDTO.getAddress());
             userRepository.save(user);
+
+            // Create a new account for the new user
+            Account account = accountService.generateAccount(userRegisterDTO, user);
+            return new ResponseEntity<>(account.getIdAccount(), HttpStatus.CREATED);
+        } else {
+            // Fetch the existing user
+            user = userRepository.findById(userRegisterDTO.getPersonalId()).orElseThrow(() -> new RuntimeException("User not found"));
+
+            // Create a new account for the existing user
+            Account account = accountService.generateAccount(userRegisterDTO, user);
+            return new ResponseEntity<>(account.getIdAccount(), HttpStatus.CREATED);
         }
-
-        Account account = accountService.generateAccount(userRegisterDTO);
-
-        return new ResponseEntity<>(account.getIdAccount(), HttpStatus.CREATED);
     }
 
     // Endpoint to retrieve user details by account ID
     @GetMapping("/{idAccount}")
-    public ResponseEntity<Optional<User>> getUserDetails(@PathVariable Long idAccount){
+    public ResponseEntity<Optional<User>> getUserDetails(@PathVariable Long idAccount) {
         try {
             if (idAccount == null) {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

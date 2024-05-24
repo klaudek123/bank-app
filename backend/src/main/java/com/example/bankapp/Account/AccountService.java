@@ -2,6 +2,7 @@ package com.example.bankapp.Account;
 
 import com.example.bankapp.Config.AppException;
 import com.example.bankapp.Mappers.AccountMapper;
+import com.example.bankapp.User.User;
 import com.example.bankapp.User.UserRegisterDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -21,13 +22,14 @@ public class AccountService {
     }
 
     // Method to generate a new account for a user
-    public Account generateAccount(UserRegisterDTO userRegisterDTO) {
+    public Account generateAccount(UserRegisterDTO userRegisterDTO, User user) {
         Account account = new Account();
         account.setNumber(generateUserNumber()); // Generate a unique account number
         account.setPassword(userRegisterDTO.getPassword());
-        account.setBalance(BigDecimal.valueOf(1000)); // Initial balance set to $1000
+        account.setBalance(BigDecimal.valueOf(10000)); // Initial balance set to 10000 PLN
+        account.setType("toChange"); // TODO frontend - add account types
         account.setStatus("1"); // Status set to active
-        account.setIdUser(userRegisterDTO.getPersonalId()); // Set user ID
+        account.setUser(user); // Set user ID
         accountRepository.save(account); // Save account details to the database
 
         return account;

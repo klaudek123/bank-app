@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,13 +14,11 @@ import java.util.Optional;
 public class TransferController {
     private final TransferService transferService;
     private final TransferRepository transferRepository;
-    private final AccountService accountService;
 
     // Constructor initializing TransferController with required services
     public TransferController(TransferService transferService, TransferRepository transferRepository, AccountService accountService) {
         this.transferService = transferService;
         this.transferRepository = transferRepository;
-        this.accountService = accountService;
     }
 
     // Endpoint to retrieve all transfers
@@ -28,16 +27,33 @@ public class TransferController {
         return transferRepository.findAll();
     }
 
+
+    @GetMapping("/{idTransfer}")
+    public ResponseEntity<Transfer> getTransferDetails(@PathVariable Long idTransfer) {
+        Transfer transfer = transferService.getTransferDetails(idTransfer);
+        if (transfer != null) {
+            return ResponseEntity.ok(transfer);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     // Endpoint to initiate a transfer
     @PostMapping()
     public ResponseEntity<String> makeTransfer(@RequestBody Transfer transfer) {
-        try {
-            transferService.makeTransfer(transfer);
-            return ResponseEntity.ok("Transfer made successfully");
-        } catch (Exception e) {
-            // Handling general server error
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error occurred");
+        if (transfer.getRecipient().equals(transfer.getSender())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Sender and recipient cannot be the same");
+        } else if (transfer.getAmount().compareTo(BigDecimal.ZERO) <= 0) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Transfer amount must be greater than zero");
+        } else {
+            try {
+                transferService.makeTransfer(transfer);
+                return ResponseEntity.ok("Transfer made successfully");
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error occurred");
+            }
         }
+
     }
 
     // Endpoint to retrieve all transfers by account ID

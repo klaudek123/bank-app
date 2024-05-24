@@ -16,7 +16,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
     Optional<Object> findByIdAccountAndPassword(Long idAccount, String password);
 
-    @Query("SELECT a.idUser FROM Account a WHERE a.idAccount = :idAccount")
+    @Query("SELECT a.user.personalId FROM Account a WHERE a.idAccount = :idAccount")
     Long getIdUserByIdAccount(@Param("idAccount") Long idAccount);
 
     @Query("SELECT a.number FROM Account a WHERE a.idAccount = :idAccount")

@@ -1,5 +1,6 @@
 package com.example.bankapp.Transfer;
 
+import com.example.bankapp.Account.Account;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,7 +26,10 @@ public class Transfer {
     @Column(columnDefinition = "DATESTAMP")
     private String date;
     private BigDecimal amount;
-    private Long idAccount;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_account")
+    private Account account;
 
 
     @PrePersist

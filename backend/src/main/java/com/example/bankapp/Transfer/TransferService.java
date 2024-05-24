@@ -19,6 +19,10 @@ public class TransferService {
         this.accountService = accountService;
     }
 
+    public Transfer getTransferDetails(Long idTransfer) {
+        return transferRepository.findByIdTransfer(idTransfer);
+    }
+
     // Retrieve all transfers associated with a specific account ID
     public List<Transfer> getTransfersByIdAccount(Long idAccount) {
         return transferRepository.findByIdAccountOrderByDateDesc(idAccount);
@@ -50,23 +54,27 @@ public class TransferService {
 
     // Initiate a transfer between accounts
     public void makeTransfer(Transfer transfer) {
+        // Creating a transfer for the sender
         Transfer senderTransfer = new Transfer();
-        senderTransfer.setSender(accountService.getNumberByIdAccount(transfer.getIdAccount()));
+        senderTransfer.setSender(transfer.getSender());
         senderTransfer.setRecipient(transfer.getRecipient());
         senderTransfer.setAmount(transfer.getAmount());
         senderTransfer.setTitle(transfer.getTitle());
-        senderTransfer.setIdAccount(transfer.getIdAccount());
+        senderTransfer.setAccount(transfer.getAccount());
 
+        // Creating a transfer for the recipient
         Transfer recipientTransfer = new Transfer();
-        recipientTransfer.setSender(accountService.getNumberByIdAccount(transfer.getIdAccount()));
+        recipientTransfer.setSender(transfer.getSender());
         recipientTransfer.setRecipient(transfer.getRecipient());
         recipientTransfer.setAmount(transfer.getAmount());
         recipientTransfer.setTitle(transfer.getTitle());
-        recipientTransfer.setIdAccount(accountService.getIdAccountByNumber(transfer.getRecipient()));
+        recipientTransfer.setAccount(transfer.getAccount());
 
-        // Save transfers in repository and perform funds transfer between accounts
-        transferRepository.save(senderTransfer);
-        transferRepository.save(recipientTransfer);
-        accountService.transferFunds(senderTransfer.getIdAccount(), recipientTransfer.getIdAccount(), senderTransfer.getAmount());
+        // Saving transfers to the repository
+        senderTransfer = transferRepository.save(senderTransfer);
+        recipientTransfer = transferRepository.save(recipientTransfer);
+
+        // Executing funds transfer between accounts
+        accountService.transferFunds(senderTransfer.getAccount().getIdAccount(), recipientTransfer.getAccount().getIdAccount(), senderTransfer.getAmount());
     }
 }

@@ -1,5 +1,6 @@
 package com.example.bankapp.Account;
 
+import com.example.bankapp.User.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,15 +20,31 @@ import java.time.LocalDateTime;
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_account")
     private Long idAccount;
 
+    @Column(name = "number", nullable = false)
     private Long number;
+
+    @Column(name = "password", nullable = false, length = 50)
     private String password;
+
+    @Column(name = "balance", nullable = false, precision = 10, scale = 2)
     private BigDecimal balance;
-    @Column(columnDefinition = "DATE")
+
+    @Column(name = "date_of_creation", nullable = false, columnDefinition = "DATE")
     private LocalDateTime dateOfCreation;
+
+    @Column(name = "type", length = 15)
+    private String type;
+
+    @Column(name = "status", length = 1)
     private String status; // 1 = active, 0 = inactive
-    private Long idUser;
+
+
+    @ManyToOne
+    @JoinColumn(name = "id_user", nullable = false)
+    private User user;
 
     @PrePersist
     public void prePersist() {

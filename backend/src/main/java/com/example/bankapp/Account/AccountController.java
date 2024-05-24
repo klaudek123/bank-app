@@ -35,8 +35,8 @@ public class AccountController {
 
     // Method to authenticate user login
     @PostMapping("/login")
-    public ResponseEntity<Object> login(@RequestBody LoginRequest loginRequest) {
-        System.out.println(loginRequest.toString());
+    public ResponseEntity<Object> logIn(@RequestBody LoginRequest loginRequest) {
+//        System.out.println(loginRequest.toString());
         Map<String, String> response = new HashMap<>();
         if (accountService.authenticateLogin(loginRequest.getIdAccount(), loginRequest.getPassword())) {
             AuthDto authDto = new AuthDto(loginRequest.getIdAccount(), userAuthenticationProvider.createToken(loginRequest.getIdAccount()));
