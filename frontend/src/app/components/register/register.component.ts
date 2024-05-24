@@ -93,7 +93,8 @@ export class RegisterComponent {
           this.router.navigateByUrl('/login'); // Przekierowanie do strony logowania po rejestracji
         },
         error => {
-          console.error('Błąd podczas rejestracji.', error);
+          window.alert("Błąd podczas rejestracji: "+ error);
+          console.error('Błąd podczas rejestracji: ', error);
         }
       );
   }
