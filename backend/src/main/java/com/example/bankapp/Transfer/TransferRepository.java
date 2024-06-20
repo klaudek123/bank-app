@@ -11,12 +11,10 @@ public interface TransferRepository extends JpaRepository<Transfer, Long> {
 
     Transfer findByIdTransfer(Long idTransfer);
 
-    Optional<Transfer> findBySenderAndIdAccount(Long sender, Long idAccount);
+    Optional<Transfer> findBySenderAndAccount_IdAccount(Long sender, Long idAccount);
 
-    Optional<Transfer> findByRecipientAndIdAccount(Long recipient, Long idAccount);
+    Optional<Transfer> findByRecipientAndAccount_IdAccount(Long recipient, Long idAccount);
 
-    List<Transfer> findByIdAccount(Long idAccount);
-
-    List<Transfer> findByIdAccountOrderByDateDesc(Long idAccount);
+    List<Transfer> findByAccount_IdAccountOrderByDateDesc(Long idAccount);
 
 }

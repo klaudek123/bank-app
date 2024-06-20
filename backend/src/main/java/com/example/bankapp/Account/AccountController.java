@@ -1,14 +1,11 @@
 package com.example.bankapp.Account;
 
-import com.example.bankapp.Config.UserAuthenticationProvider;
-import com.example.bankapp.User.UserService;
+import com.example.bankapp.Auth.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 
@@ -17,14 +14,13 @@ import java.util.Optional;
 public class AccountController {
     private final AccountRepository accountRepository;
     private final AccountService accountService;
-    private final UserService userService;
-    private final UserAuthenticationProvider userAuthenticationProvider;
+    private final AuthenticationService authenticationService;
 
-    public AccountController(AccountRepository accountRepository, AccountService accountService, UserService userService, UserAuthenticationProvider userAuthenticationProvider) {
+
+    public AccountController(AccountRepository accountRepository, AccountService accountService, AuthenticationService authenticationService) {
         this.accountRepository = accountRepository;
         this.accountService = accountService;
-        this.userService = userService;
-        this.userAuthenticationProvider = userAuthenticationProvider;
+        this.authenticationService = authenticationService;
     }
 
     // Method to retrieve all accounts
@@ -36,15 +32,15 @@ public class AccountController {
     // Method to authenticate user login
     @PostMapping("/login")
     public ResponseEntity<Object> logIn(@RequestBody LoginRequest loginRequest) {
-//        System.out.println(loginRequest.toString());
-        Map<String, String> response = new HashMap<>();
-        if (accountService.authenticateLogin(loginRequest.getIdAccount(), loginRequest.getPassword())) {
-            AuthDto authDto = new AuthDto(loginRequest.getIdAccount(), userAuthenticationProvider.createToken(loginRequest.getIdAccount()));
-
+        if (authenticationService.authenticate(loginRequest.idAccount(), loginRequest.password())) {
+            AuthDto authDto = new AuthDto(
+                    loginRequest.idAccount(),
+                    authenticationService.createToken(loginRequest.idAccount())
+            );
             return ResponseEntity.status(HttpStatus.OK).body(authDto);
         } else {
-            response.put("error", "Błąd logowania. Sprawdź email i hasło.");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+            ErrorResponse errorResponse = new ErrorResponse("Błąd logowania. Sprawdź email i hasło.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
         }
     }
 

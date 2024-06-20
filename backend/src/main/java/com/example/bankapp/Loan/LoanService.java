@@ -1,5 +1,6 @@
 package com.example.bankapp.Loan;
 
+import com.example.bankapp.Account.Account;
 import com.example.bankapp.Account.AccountService;
 import com.example.bankapp.Mappers.LoanMapper;
 import org.springframework.stereotype.Service;
@@ -21,18 +22,30 @@ public class LoanService {
     }
 
     // Method to create a new loan
-    public void createLoan(Loan loan) {
+    public void createLoan(LoanDto loanDto) {
         // Make the loan and save it in the repository.
-        accountService.makeLoan(loan.getIdAccount(), loan.getAmount());
+        accountService.makeLoan(loanDto.getIdAccount(), loanDto.getAmount());
+
+        // Map LoanDto to Loan entity
+        Loan loan = new Loan();
+        loan.setAmount(loanDto.getAmount());
+        loan.setInterestRate(loanDto.getInterestRate());
+        loan.setStartDate(loanDto.getStartDate());
+        loan.setEndDate(loanDto.getEndDate());
+        loan.setStatus(loanDto.getStatus());
+
+        // Get Account by idAccount from loanDto
+        Account account = accountService.getAccountById(loanDto.getIdAccount());
+        loan.setAccount(account);
         loanRepository.save(loan);
     }
 
     // Method to retrieve loan details by account ID
     public Optional<LoanDto> getLoanDetailsByIdAccount(Long idAccount) {
         // Retrieve the loan by account ID and status
-        Optional<Loan> loan = loanRepository.findByIdAccountAndStatus(idAccount, "1");
+        Optional<Loan> loan = loanRepository.findByAccount_IdAccountAndStatus(idAccount, "1");
 
         // Map the loan entity to a DTO if present
-        return loan.map(loanMapper::loanToLoanDto);
+        return loan.map(loanMapper::toDto);
     }
 }

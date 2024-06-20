@@ -11,25 +11,23 @@ import java.util.List;
 @RestController
 @RequestMapping("/investments")
 public class InvestmentController {
-    private final InvestmentRepository investmentRepository;
     private final InvestmentService investmentService;
 
     // Constructor initializing InvestmentController with required repository and service
-    public InvestmentController(InvestmentRepository investmentRepository, InvestmentService investmentService) {
-        this.investmentRepository = investmentRepository;
+    public InvestmentController(InvestmentService investmentService) {
         this.investmentService = investmentService;
     }
 
     // Endpoint to create a new investment
     @PostMapping()
-    public ResponseEntity<String> createInvestment(@RequestBody Investment investment){
-        return investmentService.createInvestment(investment);
+    public ResponseEntity<String> createInvestment(@RequestBody InvestmentDto investmentDto){
+        return investmentService.createInvestment(investmentDto);
     }
 
     // Endpoint to retrieve investment details by account ID
     @GetMapping("/{idAccount}")
-    public ResponseEntity<List<Investment>> getLoanDetails(@PathVariable Long idAccount){
-        List<Investment> investments = investmentService.getInvestmentDetailsByIdAccount(idAccount);
+    public ResponseEntity<List<InvestmentDto>> getLoanDetails(@PathVariable Long idAccount){
+        List<InvestmentDto> investments = investmentService.getInvestmentDetailsByIdAccount(idAccount);
         if (!investments.isEmpty()) {
             return new ResponseEntity<>(investments,HttpStatus.OK);
         }

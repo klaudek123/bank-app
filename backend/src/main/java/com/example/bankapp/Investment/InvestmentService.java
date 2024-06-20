@@ -1,6 +1,7 @@
 package com.example.bankapp.Investment;
 
 import com.example.bankapp.Account.AccountService;
+import com.example.bankapp.Mappers.InvestmentMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,7 @@ public class InvestmentService {
     }
 
     // Method to create a new investment.
-    public ResponseEntity<String> createInvestment(Investment investmentDto) {
+    public ResponseEntity<String> createInvestment(InvestmentDto investmentDto) {
         //#TODO limits on the number of investments by type
 
         // Check if the account has sufficient balance for the investment
@@ -42,9 +43,12 @@ public class InvestmentService {
             investment.setEndDate(String.valueOf(endDate));
 
             investment.setStatus(InvestmentStatus.ACTIVE);
-            investment.setIdAccount(Long.parseLong(String.valueOf(investmentDto.getIdAccount())));
+            investment.setAccount(accountService.getAccountById(investmentDto.getIdAccount()));
+
             investmentRepository.save(investment);
-            accountService.makeInvestment(investment.getIdAccount(), investment.getAmount());
+
+
+            accountService.makeInvestment(investment.getAccount().getIdAccount(), investment.getAmount());
             return ResponseEntity.ok("Inwestycja została poprawnie rozpoczęta!");
         } else {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Brak środków na koncie aby wykonać inwestycje!");
@@ -53,7 +57,7 @@ public class InvestmentService {
     }
 
     // Method to retrieve investment details by account ID
-    public List<Investment> getInvestmentDetailsByIdAccount(Long idAccount) {
-        return investmentRepository.findByIdAccountAndStatus(idAccount, InvestmentStatus.ACTIVE);
+    public List<InvestmentDto> getInvestmentDetailsByIdAccount(Long idAccount) {
+        return investmentRepository.findByIdAccountAndStatus(idAccount, InvestmentStatus.ACTIVE).stream().map(InvestmentMapper.INSTANCE::toDto).toList();
     }
 }

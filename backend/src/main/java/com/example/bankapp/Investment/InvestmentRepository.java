@@ -11,6 +11,6 @@ import java.util.Optional;
 @Repository
 public interface InvestmentRepository extends JpaRepository<Investment, Long> {
 
-    @Query("SELECT i FROM Investment i WHERE i.idAccount = :idAccount AND i.status = :status")
+    @Query("SELECT i FROM Investment i WHERE i.account.idAccount = :idAccount AND i.status = :status")
     List<Investment> findByIdAccountAndStatus(Long idAccount, InvestmentStatus status);
 }

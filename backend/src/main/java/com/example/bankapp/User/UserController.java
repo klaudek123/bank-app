@@ -1,7 +1,7 @@
 package com.example.bankapp.User;
 
-import com.example.bankapp.Account.Account;
 import com.example.bankapp.Account.AccountService;
+import com.example.bankapp.Mappers.UserMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,7 +11,6 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/users")
-
 public class UserController {
     private final UserRepository userRepository;
     private final UserService userService;
@@ -32,48 +31,24 @@ public class UserController {
 
     // Endpoint to register a new user
     @PostMapping()
-    public ResponseEntity<?> register(@RequestBody UserRegisterDTO userRegisterDTO) {
-        User user;
-        if (!userRepository.existsById(userRegisterDTO.getPersonalId())) {
-            // Create a new user
-            user = new User();
-            user.setPersonalId(userRegisterDTO.getPersonalId());
-            user.setFirstname(userRegisterDTO.getFirstname());
-            user.setLastname(userRegisterDTO.getLastname());
-            user.setDateOfBirth(userRegisterDTO.getDateOfBirth());
-            user.setEmail(userRegisterDTO.getEmail());
-            user.setAddress(userRegisterDTO.getAddress());
-            userRepository.save(user);
-
-            // Create a new account for the new user
-            Account account = accountService.generateAccount(userRegisterDTO, user);
-            return new ResponseEntity<>(account.getIdAccount(), HttpStatus.CREATED);
-        } else {
-            // Fetch the existing user
-            user = userRepository.findById(userRegisterDTO.getPersonalId()).orElseThrow(() -> new RuntimeException("User not found"));
-
-            // Create a new account for the existing user
-            Account account = accountService.generateAccount(userRegisterDTO, user);
-            return new ResponseEntity<>(account.getIdAccount(), HttpStatus.CREATED);
-        }
+    public ResponseEntity<?> register(@RequestBody UserRegisterDto userRegisterDTO) {
+        Long accountId = userService.registerUser(userRegisterDTO);
+        return new ResponseEntity<>(accountId, HttpStatus.CREATED);
     }
 
     // Endpoint to retrieve user details by account ID
     @GetMapping("/{idAccount}")
-    public ResponseEntity<Optional<User>> getUserDetails(@PathVariable Long idAccount) {
-        try {
-            if (idAccount == null) {
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
+    public ResponseEntity<Optional<UserDto>> getUserDetails(@PathVariable Long idAccount) {
+        if (idAccount == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
-            Optional<User> user = userService.getUserDetailsByPersonalId(accountService.getIdUserByIdAccount(idAccount));
-            if (user.isPresent()) {
-                return new ResponseEntity<>(user, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        Optional<UserDto> userDto = userService.getUserDetailsByPersonalId(accountService.getIdUserByIdAccount(idAccount)).map(user -> UserMapper.INSTANCE.userToUserDTO(user));
+
+        if (userDto.isPresent()) {
+            return new ResponseEntity<>(userDto, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 

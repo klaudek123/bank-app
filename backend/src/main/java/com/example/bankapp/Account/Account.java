@@ -1,5 +1,6 @@
 package com.example.bankapp.Account;
 
+import com.example.bankapp.Loan.Loan;
 import com.example.bankapp.User.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -9,6 +10,8 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -41,10 +44,12 @@ public class Account {
     @Column(name = "status", length = 1)
     private String status; // 1 = active, 0 = inactive
 
-
     @ManyToOne
     @JoinColumn(name = "id_user", nullable = false)
     private User user;
+
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Loan> loans = new ArrayList<>();
 
     @PrePersist
     public void prePersist() {

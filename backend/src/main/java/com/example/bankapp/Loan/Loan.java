@@ -1,5 +1,6 @@
 package com.example.bankapp.Loan;
 
+import com.example.bankapp.Account.Account;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,13 +19,26 @@ public class Loan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idLoan;
-    private BigDecimal amount;
-    private BigDecimal interestRate;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
-    private String status; // 1 - active, 0 - inactive
-    private Long idAccount;
 
+    @Column(name = "amount", nullable = false)
+    private BigDecimal amount;
+
+    @Column(name = "interest_rate", nullable = false)
+    private BigDecimal interestRate;
+
+    @Column(name = "start_date", nullable = false)
+    private LocalDateTime startDate;
+
+    @Column(name = "end_date", nullable = false)
+    private LocalDateTime endDate;
+
+    @Column(name = "status", nullable = false)
+    private String status; // 1 - active, 0 - inactive
+
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_account", nullable = false)
+    private Account account;
 
     @PrePersist
     public void prePresist() {

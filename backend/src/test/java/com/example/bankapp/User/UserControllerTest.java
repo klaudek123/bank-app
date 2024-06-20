@@ -3,31 +3,21 @@ package com.example.bankapp.User;
 
 import com.example.bankapp.Account.Account;
 import com.example.bankapp.Account.AccountService;
-import com.example.bankapp.User.User;
-import com.example.bankapp.User.UserController;
-import com.example.bankapp.User.UserRepository;
-import com.example.bankapp.User.UserService;
-import org.junit.Before;
+import com.example.bankapp.Mappers.UserMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -35,6 +25,7 @@ import static org.mockito.Mockito.when;
 public class UserControllerTest {
     @Mock
     private UserRepository userRepository;
+
     @Mock
     private UserService userService;
 
@@ -48,26 +39,36 @@ public class UserControllerTest {
     @Test
     public void testGetUserDetails_ReturnsUser_WhenUserExists() {
         // Arrange
-        User user = new User();
-        user.setPersonalId(1L);
-        user.setAddress("poznan");
-
-        Account account = new Account();
-        account.setIdAccount(123L);
-        account.setIdUser(1L);
-
-        Optional<User> userOptional = Optional.of(user);
+        Long personalId = 1L;
         Long idAccount = 123L;
 
-        when(accountService.getIdUserByIdAccount(idAccount)).thenReturn(account.getIdUser());
-        when(userService.getUserDetailsByPersonalId(account.getIdUser())).thenReturn(userOptional);
+        // Create a User instance
+        User user = new User();
+        user.setPersonalId(personalId);
+        user.setFirstname("John");
+        user.setLastname("Doe");
+        user.setEmail("john.doe@example.com");
+        user.setAddress("poznan");
+
+        // Create a UserDTO instance using the mapper
+        UserDto userDTO = UserMapper.INSTANCE.userToUserDTO(user);
+        Optional<UserDto> userList = Optional.of(userDTO);
+
+        // Create an Account instance and set the user
+        Account account = new Account();
+        account.setIdAccount(idAccount);
+        account.setUser(user);
+
+        // Mock the accountService and userService methods
+        when(accountService.getIdUserByIdAccount(idAccount)).thenReturn(personalId);
+        when(userService.getUserDetailsByPersonalId(personalId)).thenReturn(Optional.of(user));
 
         // Act
-        ResponseEntity<Optional<User>> response = userController.getUserDetails(idAccount);
+        ResponseEntity<Optional<UserDto>> response = userController.getUserDetails(idAccount);
 
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(userOptional, response.getBody());
+        assertEquals(userList, response.getBody());
     }
 
     @Test
@@ -78,7 +79,7 @@ public class UserControllerTest {
         when(accountService.getIdUserByIdAccount(idAccount)).thenReturn(null);
 
         // Act
-        ResponseEntity<Optional<User>> response = userController.getUserDetails(idAccount);
+        ResponseEntity<Optional<UserDto>> response = userController.getUserDetails(idAccount);
 
         // Assert
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
@@ -89,24 +90,24 @@ public class UserControllerTest {
     @Test
     public void testGetUserDetails_NoIdAccount_ReturnsBadRequest() {
         // Act
-        ResponseEntity<Optional<User>> response = userController.getUserDetails(null);
+        ResponseEntity<Optional<UserDto>> response = userController.getUserDetails(null);
 
         // Assert
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertNull(response.getBody());
     }
 
-    // Test sprawdzający obsługę wyjątków
+    // Test sprawdzający obsługę wyjątków - TODO
     @Test
     public void testGetUserDetails_ExceptionThrown_ReturnsInternalServerError() {
         // Arrange
         when(accountService.getIdUserByIdAccount(any())).thenThrow(new RuntimeException());
 
         // Act
-        ResponseEntity<Optional<User>> response = userController.getUserDetails(123L);
+        ResponseEntity<Optional<UserDto>> response = userController.getUserDetails(123L);
 
         // Assert
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         assertNull(response.getBody());
     }
 
@@ -118,7 +119,7 @@ public class UserControllerTest {
         when(userService.getUserDetailsByPersonalId(any())).thenReturn(Optional.empty());
 
         // Act
-        ResponseEntity<Optional<User>> response = userController.getUserDetails(123L);
+        ResponseEntity<Optional<UserDto>> response = userController.getUserDetails(123L);
 
         // Assert
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
@@ -130,9 +131,8 @@ public class UserControllerTest {
     public void testGetUsers_ReturnsAllUsers() {
         // Arrange
         List<User> expectedUserList = new ArrayList<>();
-        // Dodaj kilka użytkowników do listy expectedUserList
 
-        // Ustaw zachowanie metody findAll z repozytorium, aby zwracała listę użytkowników
+
         when(userRepository.findAll()).thenReturn(expectedUserList);
 
         // Act

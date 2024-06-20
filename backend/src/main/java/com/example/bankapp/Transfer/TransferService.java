@@ -1,6 +1,7 @@
 package com.example.bankapp.Transfer;
 
 import com.example.bankapp.Account.AccountService;
+import com.example.bankapp.Mappers.TransferMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -12,25 +13,23 @@ import java.util.Optional;
 public class TransferService {
     private final TransferRepository transferRepository;
     private final AccountService accountService;
+    private final TransferMapper transferMapper;
 
     // Constructor initializing TransferService with required repositories and services
-    public TransferService(TransferRepository transferRepository, AccountService accountService) {
+    public TransferService(TransferRepository transferRepository, AccountService accountService, TransferMapper transferMapper) {
         this.transferRepository = transferRepository;
         this.accountService = accountService;
-    }
-
-    public Transfer getTransferDetails(Long idTransfer) {
-        return transferRepository.findByIdTransfer(idTransfer);
+        this.transferMapper = transferMapper;
     }
 
     // Retrieve all transfers associated with a specific account ID
     public List<Transfer> getTransfersByIdAccount(Long idAccount) {
-        return transferRepository.findByIdAccountOrderByDateDesc(idAccount);
+        return transferRepository.findByAccount_IdAccountOrderByDateDesc(idAccount);
     }
 
     // Retrieve all transfers sent from a specific account
     public ResponseEntity<Optional<Transfer>> getTransfersBySender(Long idAccount) {
-        Optional<Transfer> transfers = transferRepository.findBySenderAndIdAccount(
+        Optional<Transfer> transfers = transferRepository.findBySenderAndAccount_IdAccount(
                 accountService.getNumberByIdAccount(idAccount),
                 idAccount);
         if (transfers.isPresent()) {
@@ -42,7 +41,7 @@ public class TransferService {
 
     // Retrieve all transfers received by a specific account
     public ResponseEntity<Optional<Transfer>> getTransfersByRecipient(Long idAccount) {
-        Optional<Transfer> transfers = transferRepository.findByRecipientAndIdAccount(
+        Optional<Transfer> transfers = transferRepository.findByRecipientAndAccount_IdAccount(
                 accountService.getNumberByIdAccount(idAccount),
                 idAccount);
         if (transfers.isPresent()) {
@@ -53,22 +52,23 @@ public class TransferService {
     }
 
     // Initiate a transfer between accounts
-    public void makeTransfer(Transfer transfer) {
+    public void makeTransfer(TransferDto transferDTO) {
         // Creating a transfer for the sender
         Transfer senderTransfer = new Transfer();
-        senderTransfer.setSender(transfer.getSender());
-        senderTransfer.setRecipient(transfer.getRecipient());
-        senderTransfer.setAmount(transfer.getAmount());
-        senderTransfer.setTitle(transfer.getTitle());
-        senderTransfer.setAccount(transfer.getAccount());
+        senderTransfer.setSender(transferDTO.sender());
+        senderTransfer.setRecipient(transferDTO.recipient());
+        senderTransfer.setAmount(transferDTO.amount());
+        senderTransfer.setTitle(transferDTO.title());
+        senderTransfer.setAccount(accountService.getAccountById(transferDTO.idAccount()));
+
 
         // Creating a transfer for the recipient
         Transfer recipientTransfer = new Transfer();
-        recipientTransfer.setSender(transfer.getSender());
-        recipientTransfer.setRecipient(transfer.getRecipient());
-        recipientTransfer.setAmount(transfer.getAmount());
-        recipientTransfer.setTitle(transfer.getTitle());
-        recipientTransfer.setAccount(transfer.getAccount());
+        recipientTransfer.setSender(transferDTO.sender());
+        recipientTransfer.setRecipient(transferDTO.recipient());
+        recipientTransfer.setAmount(transferDTO.amount());
+        recipientTransfer.setTitle(transferDTO.title());
+        recipientTransfer.setAccount(accountService.getAccountById(accountService.getIdAccountByNumber(transferDTO.recipient())));
 
         // Saving transfers to the repository
         senderTransfer = transferRepository.save(senderTransfer);

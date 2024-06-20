@@ -4,13 +4,13 @@ import com.example.bankapp.Account.Account;
 import com.example.bankapp.Account.AccountDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
 public interface AccountMapper {
+    AccountMapper INSTANCE = Mappers.getMapper(AccountMapper.class);
 
-    @Mapping(source = "number", target = "number")
-    @Mapping(source = "balance", target = "balance")
-    @Mapping(source = "dateOfCreation", target = "dateOfCreation")
-    @Mapping(source = "status", target = "status")
-    AccountDto accountToAccountDto(Account account);
+    AccountDto toDto(Account account);
+
+    Account toEntity(AccountDto accountDto);
 }

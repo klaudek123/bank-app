@@ -49,6 +49,8 @@ export class DesktopComponent {
             // Ustaw dane użytkownika w komponencie nagłówka
             this.accountInfo.accountBalance = response.data.balance;
             this.accountInfo.accountNumer = response.data.number;
+            localStorage.setItem('accountNumer', response.data.number);
+            console.log(response.data.number);
           }
         ).catch(
           (error) => {

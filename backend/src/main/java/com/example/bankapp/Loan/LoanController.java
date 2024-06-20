@@ -1,6 +1,5 @@
 package com.example.bankapp.Loan;
 
-import com.example.bankapp.Mappers.LoanMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +14,7 @@ public class LoanController {
     private final LoanRepository loanRepository;
 
     // Constructor initializing LoanController with required services and repository
-    public LoanController(LoanService loanService, LoanRepository loanRepository, LoanMapper loanMapper) {
+    public LoanController(LoanService loanService, LoanRepository loanRepository) {
         this.loanService = loanService;
         this.loanRepository = loanRepository;
 
@@ -23,12 +22,12 @@ public class LoanController {
 
     // Endpoint to create a new loan
     @PostMapping()
-    public ResponseEntity<String> createLoan(@RequestBody Loan loan) {
-        if (!loanRepository.existsByIdAccountAndStatus(loan.getIdAccount(), "1")) {
+    public ResponseEntity<String> createLoan(@RequestBody LoanDto loan) {
+        if (!loanRepository.existsByAccount_IdAccountAndStatus(loan.getIdAccount(), "1")) {
             loanService.createLoan(loan);
-            return ResponseEntity.ok("Pożyczka została udzielona!");
+            return ResponseEntity.ok("Loan has been granted!");
         } else {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Użytkownik posiada już pożyczkę!");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("User already has an active loan!");
         }
     }
 

@@ -39,6 +39,7 @@ export class TransferComponent {
 
   const transferDTO = {
     recipient: this.recipient,
+    sender: localStorage.getItem("accountNumer"),
     title: this.title,
     amount: amount,
     idAccount: localStorage.getItem("idAccount")

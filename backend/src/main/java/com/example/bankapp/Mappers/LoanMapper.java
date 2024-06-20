@@ -9,7 +9,6 @@ import org.mapstruct.Mapping;
 public interface LoanMapper {
     @Mapping(source = "idLoan", target = "idLoan")
     @Mapping(source = "amount", target = "amount")
-    @Mapping(source = "idAccount", target = "idAccount")
-
-    LoanDto loanToLoanDto(Loan loan);
+    @Mapping(source = "account.idAccount", target = "idAccount")
+    LoanDto toDto(Loan loan);
 }

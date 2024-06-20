@@ -1,9 +1,10 @@
 package com.example.bankapp.Account;
 
+import com.example.bankapp.Auth.AuthDto;
 import com.example.bankapp.Config.AppException;
 import com.example.bankapp.Mappers.AccountMapper;
 import com.example.bankapp.User.User;
-import com.example.bankapp.User.UserRegisterDTO;
+import com.example.bankapp.User.UserRegisterDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -22,10 +23,10 @@ public class AccountService {
     }
 
     // Method to generate a new account for a user
-    public Account generateAccount(UserRegisterDTO userRegisterDTO, User user) {
+    public Account generateAccount(UserRegisterDto userRegisterDTO, User user) {
         Account account = new Account();
         account.setNumber(generateUserNumber()); // Generate a unique account number
-        account.setPassword(userRegisterDTO.getPassword());
+        account.setPassword(userRegisterDTO.password());
         account.setBalance(BigDecimal.valueOf(10000)); // Initial balance set to 10000 PLN
         account.setType("toChange"); // TODO frontend - add account types
         account.setStatus("1"); // Status set to active
@@ -58,7 +59,7 @@ public class AccountService {
     // Method to retrieve account details by account ID
     public Optional<AccountDto> getAccountDetailsByIdAccount(Long idAccount) {
         Optional<Account> accountOptional = accountRepository.findById(idAccount);
-        return accountOptional.map(accountMapper::accountToAccountDto);
+        return accountOptional.map(accountMapper::toDto);
     }
 
     // Method to find account by ID or throw an exception if not found
@@ -140,5 +141,9 @@ public class AccountService {
 
             accountRepository.save(account);
         }
+    }
+
+    public Account getAccountById(Long idAccount) {
+        return accountRepository.getAccountByIdAccount(idAccount);
     }
 }
