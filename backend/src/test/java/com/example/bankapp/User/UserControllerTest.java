@@ -3,41 +3,54 @@ package com.example.bankapp.User;
 
 import com.example.bankapp.Account.Account;
 import com.example.bankapp.Account.AccountService;
+import com.example.bankapp.Auth.AuthenticationService;
 import com.example.bankapp.Mappers.UserMapper;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-@RunWith(MockitoJUnitRunner.class)
+
+
+@WebMvcTest(UserController.class)
+@WithMockUser
 public class UserControllerTest {
-    @Mock
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockBean
     private UserRepository userRepository;
 
-    @Mock
+    @MockBean
     private UserService userService;
 
-    @Mock
+    @MockBean
     private AccountService accountService;
 
-    @InjectMocks
-    private UserController userController;
+    @MockBean
+    private AuthenticationService authenticationService;
+
+    private String token;
 
 
     @Test
-    public void testGetUserDetails_ReturnsUser_WhenUserExists() {
+    public void testGetUserDetails_ReturnsUser_WhenUserExists() throws Exception {
         // Arrange
         Long personalId = 1L;
         Long idAccount = 123L;
@@ -63,83 +76,74 @@ public class UserControllerTest {
         when(accountService.getIdUserByIdAccount(idAccount)).thenReturn(personalId);
         when(userService.getUserDetailsByPersonalId(personalId)).thenReturn(Optional.of(user));
 
-        // Act
-        ResponseEntity<Optional<UserDto>> response = userController.getUserDetails(idAccount);
-
-        // Assert
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(userList, response.getBody());
+        // Act and Assert
+        mockMvc.perform(get("/users/" + idAccount))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.personalId").value(personalId))
+                .andExpect(jsonPath("$.firstname").value("John"))
+                .andExpect(jsonPath("$.lastname").value("Doe"))
+                .andExpect(jsonPath("$.email").value("john.doe@example.com"))
+                .andExpect(jsonPath("$.address").value("poznan"));
     }
 
     @Test
-    public void testGetUserDetails_ReturnsNotFound_WhenUserDoesNotExist() {
+    public void testGetUserDetails_ReturnsNotFound_WhenUserDoesNotExist() throws Exception {
         // Arrange
         Long idAccount = 123L;
 
         when(accountService.getIdUserByIdAccount(idAccount)).thenReturn(null);
 
-        // Act
-        ResponseEntity<Optional<UserDto>> response = userController.getUserDetails(idAccount);
-
-        // Assert
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        assertNull(response.getBody());
+        // Act and Assert
+        mockMvc.perform(get("/users/" + idAccount))
+                .andExpect(status().isNotFound())
+                .andExpect(result -> assertEquals("",result.getResponse().getContentAsString()));
     }
 
-    // Test sprawdzający obsługę żądania GET bez parametru
     @Test
-    public void testGetUserDetails_NoIdAccount_ReturnsBadRequest() {
-        // Act
-        ResponseEntity<Optional<UserDto>> response = userController.getUserDetails(null);
-
-        // Assert
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertNull(response.getBody());
+    public void testGetUserDetails_NoIdAccount_ReturnsBadRequest() throws Exception {
+        // Act and Assert
+        mockMvc.perform(get("/users/null"))
+                .andExpect(status().isBadRequest())
+                .andExpect(result -> assertEquals("",result.getResponse().getContentAsString()));
     }
 
-    // Test sprawdzający obsługę wyjątków - TODO
     @Test
-    public void testGetUserDetails_ExceptionThrown_ReturnsInternalServerError() {
+    public void testGetUserDetails_ExceptionThrown_ReturnsInternalServerError() throws Exception {
         // Arrange
-        when(accountService.getIdUserByIdAccount(any())).thenThrow(new RuntimeException());
+        when(accountService.getIdUserByIdAccount(any())).thenThrow(new RuntimeException("An unexpected error occurred"));
 
-        // Act
-        ResponseEntity<Optional<UserDto>> response = userController.getUserDetails(123L);
+        // Act and Assert
+        MvcResult result = mockMvc.perform(get("/users/123"))
+                .andExpect(status().isInternalServerError())
+                .andReturn();
 
-        // Assert
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        assertNull(response.getBody());
+        assertEquals("An unexpected error occurred", result.getResponse().getContentAsString());
     }
 
-    // Test sprawdzający zachowanie kontrolera dla różnych przypadków
     @Test
-    public void testGetUserDetails_EmptyUser_ReturnsNotFound() {
+    public void testGetUserDetails_EmptyUser_ReturnsNotFound() throws Exception {
         // Arrange
         when(accountService.getIdUserByIdAccount(any())).thenReturn(1L);
         when(userService.getUserDetailsByPersonalId(any())).thenReturn(Optional.empty());
 
-        // Act
-        ResponseEntity<Optional<UserDto>> response = userController.getUserDetails(123L);
-
-        // Assert
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        assertNull(response.getBody());
+        // Act and Assert
+        mockMvc.perform(get("/users/123"))
+                .andExpect(status().isNotFound())
+                .andExpect(result -> assertEquals("",result.getResponse().getContentAsString()));
     }
 
-
     @Test
-    public void testGetUsers_ReturnsAllUsers() {
+    public void testGetUsers_ReturnsAllUsers() throws Exception {
         // Arrange
         List<User> expectedUserList = new ArrayList<>();
 
-
         when(userRepository.findAll()).thenReturn(expectedUserList);
 
-        // Act
-        List<User> actualUserList = userController.getUsers();
+        // Act and Assert
+        MvcResult result = mockMvc.perform(get("/users"))
+                .andExpect(status().isOk())
+                .andReturn();
 
-        // Assert
-        assertEquals(expectedUserList, actualUserList);
+        assertEquals(expectedUserList.toString(), result.getResponse().getContentAsString());
     }
-
 }

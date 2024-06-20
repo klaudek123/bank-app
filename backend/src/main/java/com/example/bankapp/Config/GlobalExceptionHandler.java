@@ -5,18 +5,24 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<String> handleRuntimeException(RuntimeException ex) {
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleException(RuntimeException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleException(Exception ex) {
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<String> handleRuntimeException(Exception ex) {
         return new ResponseEntity<>("An unexpected error occurred", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler({MethodArgumentTypeMismatchException.class, NumberFormatException.class})
+    public ResponseEntity<String> handleInvalidArgument(Exception e) {
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(AppException.class)

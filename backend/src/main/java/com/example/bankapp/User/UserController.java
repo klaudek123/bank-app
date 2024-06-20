@@ -38,12 +38,12 @@ public class UserController {
 
     // Endpoint to retrieve user details by account ID
     @GetMapping("/{idAccount}")
-    public ResponseEntity<Optional<UserDto>> getUserDetails(@PathVariable Long idAccount) {
+    public ResponseEntity<Optional<UserDto>> getUserDetails(@PathVariable(required = false) Long idAccount) {
         if (idAccount == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        Optional<UserDto> userDto = userService.getUserDetailsByPersonalId(accountService.getIdUserByIdAccount(idAccount)).map(user -> UserMapper.INSTANCE.userToUserDTO(user));
+        Optional<UserDto> userDto = userService.getUserDetailsByPersonalId(accountService.getIdUserByIdAccount(idAccount)).map(UserMapper.INSTANCE::userToUserDTO);
 
         if (userDto.isPresent()) {
             return new ResponseEntity<>(userDto, HttpStatus.OK);
