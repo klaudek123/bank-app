@@ -2,13 +2,20 @@ package com.example.bankapp.Investment;
 
 import com.example.bankapp.Account.Account;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 
-@Data
 @Entity
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "investment")
 public class Investment {
     @Id
@@ -28,11 +35,11 @@ public class Investment {
     @Column(name = "interest_rate", nullable = false)
     private BigDecimal interestRate;
 
-    @Column(name = "start_date",columnDefinition = "DATESTAMP")
-    private String startDate;
+    @Column(name = "start_date", columnDefinition = "DATESTAMP")
+    private LocalDateTime startDate;
 
     @Column(name = "end_date", columnDefinition = "DATESTAMP")
-    private String endDate;
+    private LocalDateTime endDate;
 
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)

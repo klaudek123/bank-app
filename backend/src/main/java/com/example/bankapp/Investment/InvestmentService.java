@@ -2,8 +2,6 @@ package com.example.bankapp.Investment;
 
 import com.example.bankapp.Account.AccountService;
 import com.example.bankapp.Mappers.InvestmentMapper;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -15,44 +13,26 @@ import java.util.List;
 public class InvestmentService {
     private final AccountService accountService;
     private final InvestmentRepository investmentRepository;
+    private final InvestmentMapper investmentMapper;
 
     // Constructor initializing InvestmentService with required services and repository
-    public InvestmentService(AccountService accountService, InvestmentRepository investmentRepository) {
+    public InvestmentService(AccountService accountService, InvestmentRepository investmentRepository, InvestmentMapper investmentMapper) {
         this.accountService = accountService;
         this.investmentRepository = investmentRepository;
+        this.investmentMapper = investmentMapper;
     }
 
     // Method to create a new investment.
-    public ResponseEntity<String> createInvestment(InvestmentDto investmentDto) {
+    public void createInvestment(InvestmentDto investmentDto) {
         //#TODO limits on the number of investments by type
 
         // Check if the account has sufficient balance for the investment
-        if (accountService.hasSufficientInvestmentBalance(investmentDto.getIdAccount(), investmentDto.getAmount())) {
-            Investment investment = new Investment();
-            investment.setName("inv:" + investmentDto.getIdAccount() + ":" + investmentDto.getAmount() + ":" + investmentDto.getInterestRate() + ":" + investmentDto.getType());
-            investment.setType(investmentDto.getType());
-            investment.setAmount(investmentDto.getAmount());
-            investment.setInterestRate(investmentDto.getInterestRate());
+       Investment investment = investmentMapper.toEntity(investmentDto);
 
-            // Parsing the start date
-            LocalDateTime startDate = LocalDateTime.parse(investmentDto.getStartDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-            investment.setStartDate(String.valueOf(startDate));
-
-            // Parsing the end date
-            LocalDateTime endDate = LocalDateTime.parse(investmentDto.getEndDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-            investment.setEndDate(String.valueOf(endDate));
-
-            investment.setStatus(InvestmentStatus.ACTIVE);
-            investment.setAccount(accountService.getAccountById(investmentDto.getIdAccount()));
-
-            investmentRepository.save(investment);
+       investmentRepository.save(investment);
 
 
-            accountService.makeInvestment(investment.getAccount().getIdAccount(), investment.getAmount());
-            return ResponseEntity.ok("Inwestycja została poprawnie rozpoczęta!");
-        } else {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Brak środków na koncie aby wykonać inwestycje!");
-        }
+       accountService.makeInvestment(investment.getAccount().getIdAccount(), investment.getAmount());
 
     }
 
