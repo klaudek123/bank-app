@@ -31,13 +31,13 @@ public class AccountService {
         account.setType("toChange"); // TODO frontend - add account types
         account.setStatus("1"); // Status set to active
         account.setUser(user); // Set user ID
-        accountRepository.save(account); // Save account details to the database
 
-        return account;
+        // Save account details to the database
+        return accountRepository.save(account);
     }
 
     // Method to generate a unique account number
-    private Long generateUserNumber() {
+    Long generateUserNumber() {
         long numberOfAccounts = accountRepository.count(); // Get the number of existing accounts
         if (numberOfAccounts > 0) {
             Long maxNumber = accountRepository.findTopByNumber(); // Get the maximum account number

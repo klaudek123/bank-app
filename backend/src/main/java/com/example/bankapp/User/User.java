@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -29,7 +30,7 @@ public class User {
     private String lastname;
 
     @Column(name = "date_of_birth", nullable = false, columnDefinition = "DATE")
-    private Date dateOfBirth;
+    private LocalDate dateOfBirth;
 
     @Column(name = "email", nullable = false, length = 30)
     private String email;

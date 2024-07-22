@@ -1,12 +1,13 @@
 package com.example.bankapp.User;
 
-import java.util.Date;
+import java.time.LocalDate;
+
 
 public record UserRegisterDto(
         Long personalId,
         String firstname,
         String lastname,
-        Date dateOfBirth,
+        LocalDate dateOfBirth,
         String email,
         String address,
         String password
