@@ -26,16 +26,11 @@ public class LoanService {
         // Make the loan and save it in the repository.
         accountService.makeLoan(loanDto.getIdAccount(), loanDto.getAmount());
 
-        // Map LoanDto to Loan entity
-        Loan loan = new Loan();
-        loan.setAmount(loanDto.getAmount());
-        loan.setInterestRate(loanDto.getInterestRate());
-        loan.setStartDate(loanDto.getStartDate());
-        loan.setEndDate(loanDto.getEndDate());
-        loan.setStatus(loanDto.getStatus());
 
         // Get Account by idAccount from loanDto
         Account account = accountService.getAccountById(loanDto.getIdAccount());
+
+        Loan loan = loanMapper.toEntity(loanDto);
         loan.setAccount(account);
         loanRepository.save(loan);
     }

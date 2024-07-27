@@ -11,4 +11,9 @@ public interface LoanMapper {
     @Mapping(source = "amount", target = "amount")
     @Mapping(source = "account.idAccount", target = "idAccount")
     LoanDto toDto(Loan loan);
+
+    @Mapping(source = "idLoan", target = "idLoan")
+    @Mapping(source = "amount", target = "amount")
+    @Mapping(source = "idAccount", target = "account.idAccount")
+    Loan toEntity(LoanDto loanDto);
 }
