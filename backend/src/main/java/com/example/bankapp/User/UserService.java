@@ -5,6 +5,7 @@ import com.example.bankapp.Account.AccountService;
 import com.example.bankapp.Mappers.UserMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -12,21 +13,20 @@ public class UserService {
     private final UserRepository userRepository;
     private final AccountService accountService;
 
-    // Constructor initializing UserService with UserRepository
     public UserService(UserRepository userRepository, AccountService accountService) {
         this.userRepository = userRepository;
         this.accountService = accountService;
     }
 
-    // Method to retrieve user details by personal ID
-    public Optional<User> getUserDetailsByPersonalId(Long personalId) {
-        return userRepository.findById(personalId);
+    public Optional<UserDto> getAccountDetailsByPersonalId(Long personalId) {
+        return userRepository.findById(personalId)
+                .map(UserMapper.INSTANCE::userToUserDTO);
     }
 
     public Long registerUser(UserRegisterDto userRegisterDTO) {
         User user;
 
-        if(!userRepository.existsById(userRegisterDTO.personalId())){
+        if (!userRepository.existsById(userRegisterDTO.personalId())) {
             // Create a new user
             user = UserMapper.INSTANCE.userRegisterDTOtoUser(userRegisterDTO);
             userRepository.save(user);
@@ -40,5 +40,9 @@ public class UserService {
         Account account = accountService.generateAccount(userRegisterDTO, user);
 
         return account.getIdAccount();
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 }

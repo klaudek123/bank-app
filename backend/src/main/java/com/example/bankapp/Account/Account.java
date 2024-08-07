@@ -1,12 +1,11 @@
 package com.example.bankapp.Account;
 
+import com.example.bankapp.Investment.Investment;
 import com.example.bankapp.Loan.Loan;
+import com.example.bankapp.Transfer.Transfer;
 import com.example.bankapp.User.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -26,7 +25,7 @@ public class Account {
     @Column(name = "id_account")
     private Long idAccount;
 
-    @Column(name = "number", nullable = false)
+    @Column(name = "number", nullable = false, unique = true)
     private Long number;
 
     @Column(name = "password", nullable = false, length = 50)
@@ -46,10 +45,24 @@ public class Account {
 
     @ManyToOne
     @JoinColumn(name = "id_user", nullable = false)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private User user;
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private List<Investment> investments;
+
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private List<Loan> loans = new ArrayList<>();
+
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private List<Transfer> transfers = new ArrayList<>();
 
     @PrePersist
     public void prePersist() {

@@ -24,7 +24,7 @@ public class InvestmentController {
     // Endpoint to create a new investment
     @PostMapping()
     public ResponseEntity<String> createInvestment(@RequestBody InvestmentDto investmentDto){
-        if(!accountService.hasSufficientInvestmentBalance(investmentDto.idAccount(), investmentDto.amount())){
+        if(!accountService.hasSufficientBalance(investmentDto.idAccount(), investmentDto.amount())){
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Brak środków na koncie aby wykonać inwestycje!");
         }
         investmentService.createInvestment(investmentDto);

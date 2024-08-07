@@ -1,16 +1,14 @@
 package com.example.bankapp.User;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.example.bankapp.Account.Account;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -37,4 +35,7 @@ public class User {
 
     @Column(name = "address", length = 40)
     private String address;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<Account> accounts;
 }

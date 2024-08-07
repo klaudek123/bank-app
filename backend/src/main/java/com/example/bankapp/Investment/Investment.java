@@ -48,4 +48,5 @@ public class Investment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_account", nullable = false)
     private Account account;
+
 }

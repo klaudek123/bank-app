@@ -24,7 +24,7 @@ public class LoanService {
     // Method to create a new loan
     public void createLoan(LoanDto loanDto) {
         // Make the loan and save it in the repository.
-        accountService.makeLoan(loanDto.getIdAccount(), loanDto.getAmount());
+        accountService.grantLoan(loanDto.getIdAccount(), loanDto.getAmount());
 
 
         // Get Account by idAccount from loanDto

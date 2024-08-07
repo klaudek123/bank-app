@@ -33,7 +33,7 @@ public class Transfer {
 
 
     @PrePersist
-    private void prePresist(){
+    private void prePersist(){
         this.date = String.valueOf(LocalDateTime.now());
     }
 }

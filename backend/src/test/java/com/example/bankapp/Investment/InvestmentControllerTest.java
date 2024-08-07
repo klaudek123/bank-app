@@ -50,7 +50,7 @@ public class InvestmentControllerTest {
                 startDate, endDate, InvestmentStatus.ACTIVE, 1L
         );
 
-        when(accountService.hasSufficientInvestmentBalance(eq(investmentDto.idAccount()), eq(investmentDto.amount()))).thenReturn(true);
+        when(accountService.hasSufficientBalance(eq(investmentDto.idAccount()), eq(investmentDto.amount()))).thenReturn(true);
 
         // Act
         ResponseEntity<String> response = investmentController.createInvestment(investmentDto);
@@ -72,7 +72,7 @@ public class InvestmentControllerTest {
                 startDate, endDate, InvestmentStatus.ACTIVE, 1L
         );
 
-        when(accountService.hasSufficientInvestmentBalance(eq(investmentDto.idAccount()), eq(investmentDto.amount()))).thenReturn(false);
+        when(accountService.hasSufficientBalance(eq(investmentDto.idAccount()), eq(investmentDto.amount()))).thenReturn(false);
 
         // Act
         ResponseEntity<String> response = investmentController.createInvestment(investmentDto);

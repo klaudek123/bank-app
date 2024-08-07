@@ -29,7 +29,7 @@ public class UserServiceTest {
     private UserService userService;
 
     @Test
-    public void testGetUserDetailsByPersonalId_UserExists() {
+    public void testgetAccountDetailsByPersonalId_UserExists() {
         // Arrange
         Long personalId = 1L;
         User user = new User();
@@ -37,21 +37,21 @@ public class UserServiceTest {
         when(userRepository.findById(personalId)).thenReturn(Optional.of(user));
 
         // Act
-        Optional<User> result = userService.getUserDetailsByPersonalId(personalId);
+        Optional<UserDto> result = userService.getAccountDetailsByPersonalId(personalId);
 
         // Assert
         assertTrue(result.isPresent());
-        assertEquals(personalId, result.get().getPersonalId());
+        assertEquals(personalId, result.get().personalId());
     }
 
     @Test
-    public void testGetUserDetailsByPersonalId_UserDoesNotExist() {
+    public void testgetAccountDetailsByPersonalId_UserDoesNotExist() {
         // Arrange
         Long personalId = 1L;
         when(userRepository.findById(personalId)).thenReturn(Optional.empty());
 
         // Act
-        Optional<User> result = userService.getUserDetailsByPersonalId(personalId);
+        Optional<UserDto> result = userService.getAccountDetailsByPersonalId(personalId);
 
         // Assert
         assertFalse(result.isPresent());

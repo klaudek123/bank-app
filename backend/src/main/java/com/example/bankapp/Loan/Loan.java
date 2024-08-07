@@ -41,7 +41,7 @@ public class Loan {
     private Account account;
 
     @PrePersist
-    public void prePresist() {
+    public void prePersist() {
 //        this.name = "loan" + this.idLoan;
 
         if (this.endDate.isAfter(this.startDate) && LocalDateTime.now().isBefore(endDate)) {

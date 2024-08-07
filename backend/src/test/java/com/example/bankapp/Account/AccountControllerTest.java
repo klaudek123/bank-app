@@ -41,32 +41,32 @@ public class AccountControllerTest {
     }
 
     @Test
-    public void testGetAccounts() {
+    public void testGetAllAccounts() {
         // Arrange
         List<Account> accounts = List.of(new Account(), new Account());
-        when(accountRepository.findAll()).thenReturn(accounts);
+        when(accountService.getAllAccounts()).thenReturn(accounts);
 
         // Act
-        List<Account> result = accountController.getAccounts();
+        List<Account> result = accountController.getAllAccounts();
 
         // Assert
         assertEquals(2, result.size());
-        verify(accountRepository, times(1)).findAll();
+        verify(accountService, times(1)).getAllAccounts();
     }
 
     @Test
-    public void testLogIn_Success() {
+    public void testLogin_Success() {
         // Arrange
         LoginRequest loginRequest = new LoginRequest(1L, "password");
         when(authenticationService.authenticate(loginRequest.idAccount(), loginRequest.password())).thenReturn(true);
         when(authenticationService.createToken(loginRequest.idAccount())).thenReturn("token");
 
         // Act
-        ResponseEntity<Object> response = accountController.logIn(loginRequest);
+        ResponseEntity<Object> response = accountController.login(loginRequest);
 
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertTrue(response.getBody() instanceof AuthDto);
+        assertInstanceOf(AuthDto.class, response.getBody());
         AuthDto authDto = (AuthDto) response.getBody();
         assertEquals(loginRequest.idAccount(), authDto.idAccount());
         assertEquals("token", authDto.token());
@@ -75,52 +75,58 @@ public class AccountControllerTest {
     }
 
     @Test
-    public void testLogIn_Failure() {
+    public void testLogin_Failure() {
         // Arrange
         LoginRequest loginRequest = new LoginRequest(1L, "wrongPassword");
         when(authenticationService.authenticate(loginRequest.idAccount(), loginRequest.password())).thenReturn(false);
 
         // Act
-        ResponseEntity<Object> response = accountController.logIn(loginRequest);
+        ResponseEntity<Object> response = accountController.login(loginRequest);
 
         // Assert
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
-        assertTrue(response.getBody() instanceof ErrorResponse);
+        assertInstanceOf(ErrorResponse.class, response.getBody());
         ErrorResponse errorResponse = (ErrorResponse) response.getBody();
-        assertEquals("Błąd logowania. Sprawdź email i hasło.", errorResponse.error());
+        assertEquals("Login error. Check email and password.", errorResponse.error());
         verify(authenticationService, times(1)).authenticate(loginRequest.idAccount(), loginRequest.password());
         verify(authenticationService, never()).createToken(any());
     }
 
     @Test
-    public void testGetUserDetails_Found() {
+    public void testGetAccountDetails_Found() {
         // Arrange
         Long idAccount = 1L;
-        AccountDto accountDto = new AccountDto(1L, BigDecimal.valueOf(10000), LocalDateTime.now(), "1");
-        when(accountService.getAccountDetailsByIdAccount(idAccount)).thenReturn(Optional.of(accountDto));
+        AccountDto accountDto = new AccountDto(
+                1L,
+                1L,
+                BigDecimal.valueOf(10000),
+                LocalDateTime.now(),
+                "default",
+                "1");
+        when(accountService.getAccountDetailsById(idAccount)).thenReturn(Optional.of(accountDto));
 
         // Act
-        ResponseEntity<Optional<AccountDto>> response = accountController.getUserDetails(idAccount);
+        ResponseEntity<AccountDto> response = accountController.getAccountDetails(idAccount);
 
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertTrue(response.getBody().isPresent());
-        assertEquals(accountDto, response.getBody().get());
-        verify(accountService, times(1)).getAccountDetailsByIdAccount(idAccount);
+        assertNotNull(response.getBody());
+        assertEquals(accountDto, response.getBody());
+        verify(accountService, times(1)).getAccountDetailsById(idAccount);
     }
 
     @Test
-    public void testGetUserDetails_NotFound() {
+    public void testGetAccountDetails_NotFound() {
         // Arrange
         Long idAccount = 1L;
-        when(accountService.getAccountDetailsByIdAccount(idAccount)).thenReturn(Optional.empty());
+        when(accountService.getAccountDetailsById(idAccount)).thenReturn(Optional.empty());
 
         // Act
-        ResponseEntity<Optional<AccountDto>> response = accountController.getUserDetails(idAccount);
+        ResponseEntity<AccountDto> response = accountController.getAccountDetails(idAccount);
 
         // Assert
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         assertNull(response.getBody());
-        verify(accountService, times(1)).getAccountDetailsByIdAccount(idAccount);
+        verify(accountService, times(1)).getAccountDetailsById(idAccount);
     }
 }

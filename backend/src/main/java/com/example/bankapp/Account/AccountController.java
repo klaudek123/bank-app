@@ -12,47 +12,41 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/accounts")
 public class AccountController {
-    private final AccountRepository accountRepository;
     private final AccountService accountService;
     private final AuthenticationService authenticationService;
 
 
-    public AccountController(AccountRepository accountRepository, AccountService accountService, AuthenticationService authenticationService) {
-        this.accountRepository = accountRepository;
+    public AccountController(AccountService accountService, AuthenticationService authenticationService) {
         this.accountService = accountService;
         this.authenticationService = authenticationService;
     }
-
-    // Method to retrieve all accounts
+    
     @GetMapping()
-    public List<Account> getAccounts() {
-        return accountRepository.findAll();
+    public List<Account> getAllAccounts() {
+        return accountService.getAllAccounts();
     }
-
-    // Method to authenticate user login
+    
     @PostMapping("/login")
-    public ResponseEntity<Object> logIn(@RequestBody LoginRequest loginRequest) {
-        if (authenticationService.authenticate(loginRequest.idAccount(), loginRequest.password())) {
+    public ResponseEntity<Object> login(@RequestBody LoginRequest loginRequest) {
+        boolean authenticated = authenticationService.authenticate(loginRequest.idAccount(), loginRequest.password());
+        if (authenticated) {
             AuthDto authDto = new AuthDto(
                     loginRequest.idAccount(),
                     authenticationService.createToken(loginRequest.idAccount())
             );
-            return ResponseEntity.status(HttpStatus.OK).body(authDto);
+            return ResponseEntity.ok(authDto);
         } else {
-            ErrorResponse errorResponse = new ErrorResponse("Błąd logowania. Sprawdź email i hasło.");
+            ErrorResponse errorResponse = new ErrorResponse("Login error. Check email and password.");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
         }
     }
-
-    // Method to get account details by account ID
+    
     @GetMapping("/{idAccount}")
-    public ResponseEntity<Optional<AccountDto>> getUserDetails(@PathVariable Long idAccount) {
-        Optional<AccountDto> account = accountService.getAccountDetailsByIdAccount(idAccount);
-        if (account.isPresent()) {
-            return new ResponseEntity<>(account, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<AccountDto> getAccountDetails(@PathVariable Long idAccount) {
+        Optional<AccountDto> accountDto = accountService.getAccountDetailsById(idAccount);
+
+        return accountDto.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
 

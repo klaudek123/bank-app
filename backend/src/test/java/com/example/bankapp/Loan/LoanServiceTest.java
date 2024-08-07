@@ -68,7 +68,7 @@ public class LoanServiceTest {
         loanService.createLoan(loanDto);
 
         // Assert
-        verify(accountService, times(1)).makeLoan(eq(1L), eq(BigDecimal.valueOf(1000)));
+        verify(accountService, times(1)).grantLoan(eq(1L), eq(BigDecimal.valueOf(1000)));
         verify(loanRepository, times(1)).save(any(Loan.class));
     }
 

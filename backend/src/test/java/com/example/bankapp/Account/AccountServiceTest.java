@@ -36,18 +36,16 @@ public class AccountServiceTest {
         User user = new User();
         UserRegisterDto userRegisterDto = new UserRegisterDto(1L, "John", "Doe", LocalDate.of(2000, 3, 2), "john.doe@example.com", "poznan", "password");
 
-        // Tworzymy obiekt Account i ustawiamy idAccount
         Account account = new Account();
-        account.setIdAccount(123L); // Ustawiamy idAccount ręcznie
+        account.setIdAccount(123L);
         account.setNumber(1000000001L);
         account.setPassword("password");
         account.setBalance(BigDecimal.valueOf(10000));
-        account.setType("toChange");
+        account.setType("default");
         account.setStatus("1");
         account.setUser(user);
 
         when(accountRepository.save(any(Account.class))).thenReturn(account);
-        when(accountRepository.count()).thenReturn(0L);
 
         // Act
         Account result = accountService.generateAccount(userRegisterDto, user);
@@ -60,25 +58,24 @@ public class AccountServiceTest {
     }
 
     @Test
-    public void testGenerateUserNumber_NoAccounts() {
+    public void testGenerateUniqueAccountNumber_NoAccounts() {
         // Arrange
-        when(accountRepository.count()).thenReturn(0L);
+        when(accountRepository.findTopByNumber()).thenReturn(null);
 
         // Act
-        Long result = accountService.generateUserNumber();
+        Long result = accountService.generateUniqueAccountNumber();
 
         // Assert
         assertEquals(1000000001L, result);
     }
 
     @Test
-    public void testGenerateUserNumber_WithAccounts() {
+    public void testGenerateUniqueAccountNumber_WithAccounts() {
         // Arrange
-        when(accountRepository.count()).thenReturn(5L);
         when(accountRepository.findTopByNumber()).thenReturn(1000000005L);
 
         // Act
-        Long result = accountService.generateUserNumber();
+        Long result = accountService.generateUniqueAccountNumber();
 
         // Assert
         assertEquals(1000000006L, result);
@@ -127,21 +124,23 @@ public class AccountServiceTest {
     }
 
     @Test
-    public void testGetAccountDetailsByIdAccount() {
+    public void testGetAccountDetailsById() {
         // Arrange
         Long idAccount = 1L;
         Account account = new Account();
         AccountDto accountDto = new AccountDto(
+                account.getIdAccount(),
                 account.getNumber(),
                 account.getBalance(),
                 account.getDateOfCreation(),
+                account.getType(),
                 account.getStatus()
         );
         when(accountRepository.findById(idAccount)).thenReturn(Optional.of(account));
         when(accountMapper.toDto(account)).thenReturn(accountDto);
 
         // Act
-        Optional<AccountDto> result = accountService.getAccountDetailsByIdAccount(idAccount);
+        Optional<AccountDto> result = accountService.getAccountDetailsById(idAccount);
 
         // Assert
         assertTrue(result.isPresent());
@@ -171,7 +170,7 @@ public class AccountServiceTest {
     }
 
     @Test
-    public void testMakeLoan() {
+    public void testGrantLoan() {
         // Arrange
         Long idAccount = 1L;
         BigDecimal loanAmount = BigDecimal.valueOf(1000);
@@ -180,7 +179,7 @@ public class AccountServiceTest {
         when(accountRepository.findById(idAccount)).thenReturn(Optional.of(account));
 
         // Act
-        accountService.makeLoan(idAccount, loanAmount);
+        accountService.grantLoan(idAccount, loanAmount);
 
         // Assert
         assertEquals(BigDecimal.valueOf(6000), account.getBalance());
@@ -188,7 +187,7 @@ public class AccountServiceTest {
     }
 
     @Test
-    public void testHasSufficientInvestmentBalance_EnoughBalance() {
+    public void testHasSufficientBalance_EnoughBalance() {
         // Arrange
         Long idAccount = 1L;
         BigDecimal amount = BigDecimal.valueOf(1000);
@@ -197,14 +196,14 @@ public class AccountServiceTest {
         when(accountRepository.findById(idAccount)).thenReturn(Optional.of(account));
 
         // Act
-        boolean result = accountService.hasSufficientInvestmentBalance(idAccount, amount);
+        boolean result = accountService.hasSufficientBalance(idAccount, amount);
 
         // Assert
         assertTrue(result);
     }
 
     @Test
-    public void testHasSufficientInvestmentBalance_NotEnoughBalance() {
+    public void testHasSufficientBalance_NotEnoughBalance() {
         // Arrange
         Long idAccount = 1L;
         BigDecimal amount = BigDecimal.valueOf(10000);
@@ -213,7 +212,7 @@ public class AccountServiceTest {
         when(accountRepository.findById(idAccount)).thenReturn(Optional.of(account));
 
         // Act
-        boolean result = accountService.hasSufficientInvestmentBalance(idAccount, amount);
+        boolean result = accountService.hasSufficientBalance(idAccount, amount);
 
         // Assert
         assertFalse(result);
@@ -241,7 +240,7 @@ public class AccountServiceTest {
         // Arrange
         Long idAccount = 1L;
         Account account = new Account();
-        when(accountRepository.getAccountByIdAccount(idAccount)).thenReturn(account);
+        when(accountRepository.findById(idAccount)).thenReturn(Optional.of(account));
 
         // Act
         Account result = accountService.getAccountById(idAccount);

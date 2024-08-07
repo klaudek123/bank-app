@@ -3,7 +3,6 @@ package com.example.bankapp.User;
 
 import com.example.bankapp.Account.Account;
 import com.example.bankapp.Account.AccountService;
-import com.example.bankapp.Auth.AuthenticationService;
 import com.example.bankapp.Mappers.UserMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,13 +17,11 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @WebMvcTest(UserController.class)
@@ -43,14 +40,9 @@ public class UserControllerTest {
     @MockBean
     private AccountService accountService;
 
-    @MockBean
-    private AuthenticationService authenticationService;
-
-    private String token;
-
 
     @Test
-    public void testGetUserDetails_ReturnsUser_WhenUserExists() throws Exception {
+    public void testgetAccountDetails_ReturnsUser_WhenUserExists() throws Exception {
         // Arrange
         Long personalId = 1L;
         Long idAccount = 123L;
@@ -65,7 +57,6 @@ public class UserControllerTest {
 
         // Create a UserDTO instance using the mapper
         UserDto userDTO = UserMapper.INSTANCE.userToUserDTO(user);
-        Optional<UserDto> userList = Optional.of(userDTO);
 
         // Create an Account instance and set the user
         Account account = new Account();
@@ -74,7 +65,7 @@ public class UserControllerTest {
 
         // Mock the accountService and userService methods
         when(accountService.getIdUserByIdAccount(idAccount)).thenReturn(personalId);
-        when(userService.getUserDetailsByPersonalId(personalId)).thenReturn(Optional.of(user));
+        when(userService.getAccountDetailsByPersonalId(personalId)).thenReturn(Optional.of(userDTO));
 
         // Act and Assert
         mockMvc.perform(get("/users/" + idAccount))
@@ -87,7 +78,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testGetUserDetails_ReturnsNotFound_WhenUserDoesNotExist() throws Exception {
+    public void testgetAccountDetails_ReturnsNotFound_WhenUserDoesNotExist() throws Exception {
         // Arrange
         Long idAccount = 123L;
 
@@ -96,19 +87,19 @@ public class UserControllerTest {
         // Act and Assert
         mockMvc.perform(get("/users/" + idAccount))
                 .andExpect(status().isNotFound())
-                .andExpect(result -> assertEquals("",result.getResponse().getContentAsString()));
+                .andExpect(result -> assertEquals("", result.getResponse().getContentAsString()));
     }
 
     @Test
-    public void testGetUserDetails_NoIdAccount_ReturnsBadRequest() throws Exception {
+    public void testgetAccountDetails_NoIdAccount_ReturnsBadRequest() throws Exception {
         // Act and Assert
         mockMvc.perform(get("/users/null"))
                 .andExpect(status().isBadRequest())
-                .andExpect(result -> assertEquals("",result.getResponse().getContentAsString()));
+                .andExpect(result -> assertEquals("", result.getResponse().getContentAsString()));
     }
 
     @Test
-    public void testGetUserDetails_ExceptionThrown_ReturnsInternalServerError() throws Exception {
+    public void testgetAccountDetails_ExceptionThrown_ReturnsInternalServerError() throws Exception {
         // Arrange
         when(accountService.getIdUserByIdAccount(any())).thenThrow(new RuntimeException("An unexpected error occurred"));
 
@@ -121,15 +112,15 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testGetUserDetails_EmptyUser_ReturnsNotFound() throws Exception {
+    public void testgetAccountDetails_EmptyUser_ReturnsNotFound() throws Exception {
         // Arrange
         when(accountService.getIdUserByIdAccount(any())).thenReturn(1L);
-        when(userService.getUserDetailsByPersonalId(any())).thenReturn(Optional.empty());
+        when(userService.getAccountDetailsByPersonalId(any())).thenReturn(Optional.empty());
 
         // Act and Assert
         mockMvc.perform(get("/users/123"))
                 .andExpect(status().isNotFound())
-                .andExpect(result -> assertEquals("",result.getResponse().getContentAsString()));
+                .andExpect(result -> assertEquals("", result.getResponse().getContentAsString()));
     }
 
     @Test
