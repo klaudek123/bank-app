@@ -10,29 +10,26 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/investments")
+@RequestMapping("/accounts/{idAccount}/investments")
 public class InvestmentController {
     private final InvestmentService investmentService;
     private final AccountService accountService;
 
-    // Constructor initializing InvestmentController with required repository and service
     public InvestmentController(InvestmentService investmentService, AccountService accountService) {
         this.investmentService = investmentService;
         this.accountService = accountService;
     }
 
-    // Endpoint to create a new investment
     @PostMapping()
-    public ResponseEntity<String> createInvestment(@RequestBody InvestmentDto investmentDto){
-        if(!accountService.hasSufficientBalance(investmentDto.idAccount(), investmentDto.amount())){
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Brak środków na koncie aby wykonać inwestycje!");
+    public ResponseEntity<String> createInvestment(@PathVariable Long idAccount, @RequestBody InvestmentDto investmentDto){
+        if(!accountService.hasSufficientBalance(idAccount, investmentDto.amount())){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("There are no funds in the account to make the investment.");
         }
-        investmentService.createInvestment(investmentDto);
-        return ResponseEntity.ok("Inwestycja została poprawnie rozpoczęta!");
+        investmentService.createInvestment(idAccount, investmentDto);
+        return ResponseEntity.ok("The investment has been started successfully.");
     }
 
-    // Endpoint to retrieve investment details by account ID
-    @GetMapping("/{idAccount}")
+    @GetMapping()
     public ResponseEntity<List<InvestmentDto>> getInvestmentDetails(@PathVariable Long idAccount){
         List<InvestmentDto> investments = investmentService.getInvestmentDetailsByIdAccount(idAccount);
         if (!investments.isEmpty()) {

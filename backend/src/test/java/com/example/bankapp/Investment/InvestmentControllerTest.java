@@ -42,45 +42,47 @@ public class InvestmentControllerTest {
     @Test
     public void testCreateInvestment_ReturnsOk_WhenSufficientBalance() {
         // Arrange
+        Long idAccount = 1L;
         LocalDateTime startDate = LocalDateTime.of(2024, 1, 1, 0, 0);
         LocalDateTime endDate = LocalDateTime.of(2024, 12, 31, 23, 59);
         InvestmentDto investmentDto = new InvestmentDto(
                 1L, "Investment1", InvestmentType.FUND,
                 BigDecimal.valueOf(1000), BigDecimal.valueOf(0.05),
-                startDate, endDate, InvestmentStatus.ACTIVE, 1L
+                startDate, endDate, InvestmentStatus.ACTIVE
         );
 
-        when(accountService.hasSufficientBalance(eq(investmentDto.idAccount()), eq(investmentDto.amount()))).thenReturn(true);
+        when(accountService.hasSufficientBalance(eq(idAccount), eq(investmentDto.amount()))).thenReturn(true);
 
         // Act
-        ResponseEntity<String> response = investmentController.createInvestment(investmentDto);
+        ResponseEntity<String> response = investmentController.createInvestment(idAccount, investmentDto);
 
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("Inwestycja została poprawnie rozpoczęta!", response.getBody());
-        verify(investmentService, times(1)).createInvestment(investmentDto);
+        assertEquals("The investment has been started successfully.", response.getBody());
+        verify(investmentService, times(1)).createInvestment(idAccount, investmentDto);
     }
 
     @Test
     public void testCreateInvestment_ReturnsConflict_WhenInsufficientBalance() {
         // Arrange
+        Long idAccount = 1L;
         LocalDateTime startDate = LocalDateTime.of(2024, 1, 1, 0, 0);
         LocalDateTime endDate = LocalDateTime.of(2024, 12, 31, 23, 59);
         InvestmentDto investmentDto = new InvestmentDto(
                 1L, "Investment1", InvestmentType.GOLD,
                 BigDecimal.valueOf(1000), BigDecimal.valueOf(0.05),
-                startDate, endDate, InvestmentStatus.ACTIVE, 1L
+                startDate, endDate, InvestmentStatus.ACTIVE
         );
 
-        when(accountService.hasSufficientBalance(eq(investmentDto.idAccount()), eq(investmentDto.amount()))).thenReturn(false);
+        when(accountService.hasSufficientBalance(eq(idAccount), eq(investmentDto.amount()))).thenReturn(false);
 
         // Act
-        ResponseEntity<String> response = investmentController.createInvestment(investmentDto);
+        ResponseEntity<String> response = investmentController.createInvestment(idAccount, investmentDto);
 
         // Assert
         assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
-        assertEquals("Brak środków na koncie aby wykonać inwestycje!", response.getBody());
-        verify(investmentService, never()).createInvestment(any(InvestmentDto.class));
+        assertEquals("There are no funds in the account to make the investment.", response.getBody());
+        verify(investmentService, never()).createInvestment(anyLong(),any(InvestmentDto.class));
     }
 
     @Test
@@ -93,7 +95,7 @@ public class InvestmentControllerTest {
                 new InvestmentDto(
                         1L, "Investment1", InvestmentType.FUND,
                         BigDecimal.valueOf(1000), BigDecimal.valueOf(0.05),
-                        startDate, endDate, InvestmentStatus.ACTIVE, idAccount
+                        startDate, endDate, InvestmentStatus.ACTIVE
                 )
         );
 

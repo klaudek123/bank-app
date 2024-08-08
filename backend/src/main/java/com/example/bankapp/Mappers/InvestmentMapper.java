@@ -10,9 +10,9 @@ import org.mapstruct.factory.Mappers;
 public interface InvestmentMapper {
     InvestmentMapper INSTANCE = Mappers.getMapper(InvestmentMapper.class);
 
-    @Mapping(source = "account.idAccount", target = "idAccount")
+
     InvestmentDto toDto(Investment investment);
 
-    @Mapping(source = "idAccount", target = "account.idAccount")
+
     Investment toEntity(InvestmentDto investmentDto);
 }

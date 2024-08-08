@@ -11,7 +11,5 @@ public record InvestmentDto(
         BigDecimal interestRate,
         LocalDateTime startDate,
         LocalDateTime endDate,
-        InvestmentStatus status,
-        Long idAccount
-) {
-}
+        InvestmentStatus status
+) {}

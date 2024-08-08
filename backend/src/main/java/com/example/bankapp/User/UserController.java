@@ -19,12 +19,12 @@ public class UserController {
         this.accountService = accountService;
     }
 
-    @GetMapping
+    @GetMapping()
     public List<User> getUsers() {
         return userService.getAllUsers();
     }
 
-    @PostMapping
+    @PostMapping()
     public ResponseEntity<?> register(@RequestBody UserRegisterDto userRegisterDTO) {
         Long accountId = userService.registerUser(userRegisterDTO);
         return new ResponseEntity<>(accountId, HttpStatus.CREATED);

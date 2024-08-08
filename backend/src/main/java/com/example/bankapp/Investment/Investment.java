@@ -35,10 +35,10 @@ public class Investment {
     @Column(name = "interest_rate", nullable = false)
     private BigDecimal interestRate;
 
-    @Column(name = "start_date", columnDefinition = "DATESTAMP")
+    @Column(name = "start_date", columnDefinition = "TIMESTAMP")
     private LocalDateTime startDate;
 
-    @Column(name = "end_date", columnDefinition = "DATESTAMP")
+    @Column(name = "end_date", columnDefinition = "TIMESTAMP")
     private LocalDateTime endDate;
 
     @Column(name = "status", nullable = false)

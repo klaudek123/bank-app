@@ -45,25 +45,31 @@ public class InvestmentServiceTest {
     @Test
     public void testCreateInvestment_Success() {
         // Arrange
+        Long idAccount = 1L;
         LocalDateTime startDate = LocalDateTime.of(2024, 1, 1, 0, 0);
         LocalDateTime endDate = LocalDateTime.of(2024, 12, 31, 23, 59);
         InvestmentDto investmentDto = new InvestmentDto(
                 1L, "Investment1", InvestmentType.FUND,
                 BigDecimal.valueOf(1000), BigDecimal.valueOf(0.05),
-                startDate, endDate, InvestmentStatus.ACTIVE, 1L
+                startDate, endDate, InvestmentStatus.ACTIVE
         );
+
+        Account account = new Account();
+        account.setIdAccount(idAccount);
 
         Investment investment = new Investment();
         investment.setIdInvestment(1L);
-        investment.setAccount(new Account()); // Assuming Account has a default constructor
+        investment.setAccount(account); // Assuming Account has a default constructor
         investment.getAccount().setIdAccount(1L);
         investment.setAmount(BigDecimal.valueOf(1000));
 
+
         when(investmentMapper.toEntity(investmentDto)).thenReturn(investment);
         when(investmentRepository.save(any(Investment.class))).thenReturn(investment);
+        when(accountService.getAccountById(any(Long.class))).thenReturn(account);
 
         // Act
-        investmentService.createInvestment(investmentDto);
+        investmentService.createInvestment(idAccount, investmentDto);
 
         // Assert
         verify(investmentRepository, times(1)).save(any(Investment.class));
@@ -91,7 +97,7 @@ public class InvestmentServiceTest {
         InvestmentDto investmentDto = new InvestmentDto(
                 1L, "Investment1", InvestmentType.FUND,
                 BigDecimal.valueOf(1000), BigDecimal.valueOf(0.05),
-                startDate, endDate, InvestmentStatus.ACTIVE, idAccount
+                startDate, endDate, InvestmentStatus.ACTIVE
         );
 
         when(investmentRepository.findByIdAccountAndStatus(eq(idAccount), eq(InvestmentStatus.ACTIVE)))
