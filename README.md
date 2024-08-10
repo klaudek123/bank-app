@@ -139,9 +139,12 @@ This repository contains the backend code for a simple bank application. The app
   - `GET /users`: Retrieve all users.
   - `POST /users`: Register a new user.
   - `GET /users/{idAccount}`: Get user details by account ID.
+  
 
 - **Accounts**:
   - `POST /accounts`: Create a new account.
+  - `GET /accounts/{idAccount}`: Get account details by account ID.
+  - `POST /accounts/login`: Account authentication to log into the system.
 
 - **Transfers**:
   - `GET /transfers`: Retrieve all transfers.
@@ -151,12 +154,13 @@ This repository contains the backend code for a simple bank application. The app
   - `GET /transfers/received`: Get all transfers received by an account.
 
 - **Loans**:
-  - `POST /loans`: Create a new loan.
-  - `GET /loans/{idAccount}`: Get loan details by account ID.
-
+  - `GET /accounts/{idAccount}/loans`: Get loan details by account ID.
+  - `POST /accounts/{idAccount}/loans`: Create a new loan.
+  
 - **Investments**:
-  - `POST /investments`: Create a new investment.
-  - `GET /investments/{idAccount}`: Get investment details by account ID.
+  - `GET /accounts/{idAccount}/investments`: Get investment details by account ID.
+  - `POST /accounts/{idAccount}/investments`: Create a new investment.
+  
 
  ## Author
  - Klaudiusz Szklarkowski (@klaudek123)
