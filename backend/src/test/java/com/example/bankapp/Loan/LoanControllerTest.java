@@ -13,8 +13,6 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -32,37 +30,39 @@ public class LoanControllerTest {
     @Test
     public void testCreateLoan_Success() {
         // Arrange
+        Long idAccount = 1L;
         LoanDto loanDto = new LoanDto(
                 1L, BigDecimal.valueOf(1000), BigDecimal.valueOf(0.05),
-                LocalDateTime.now(), LocalDateTime.now().plusMonths(12), "1", 1L
+                LocalDateTime.now(), LocalDateTime.now().plusMonths(12), LoanStatus.ACTIVE
         );
-        when(loanRepository.existsByAccount_IdAccountAndStatus(loanDto.getIdAccount(), "1")).thenReturn(false);
+        when(loanRepository.existsByAccount_IdAccountAndStatus(idAccount, LoanStatus.ACTIVE)).thenReturn(false);
 
         // Act
-        ResponseEntity<String> response = loanController.createLoan(loanDto);
+        ResponseEntity<String> response = loanController.createLoan(idAccount, loanDto);
 
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals("Loan has been granted!", response.getBody());
-        verify(loanService, times(1)).createLoan(loanDto);
+        verify(loanService, times(1)).createLoan(idAccount, loanDto);
     }
 
     @Test
     public void testCreateLoan_Conflict() {
         // Arrange
+        Long idAccount = 1L;
         LoanDto loanDto = new LoanDto(
                 1L, BigDecimal.valueOf(1000), BigDecimal.valueOf(0.05),
-                LocalDateTime.now(), LocalDateTime.now().plusMonths(12), "1", 1L
+                LocalDateTime.now(), LocalDateTime.now().plusMonths(12), LoanStatus.ACTIVE
         );
-        when(loanRepository.existsByAccount_IdAccountAndStatus(loanDto.getIdAccount(), "1")).thenReturn(true);
+        when(loanRepository.existsByAccount_IdAccountAndStatus(idAccount, LoanStatus.ACTIVE)).thenReturn(true);
 
         // Act
-        ResponseEntity<String> response = loanController.createLoan(loanDto);
+        ResponseEntity<String> response = loanController.createLoan(idAccount, loanDto);
 
         // Assert
         assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
         assertEquals("User already has an active loan!", response.getBody());
-        verify(loanService, never()).createLoan(loanDto);
+        verify(loanService, never()).createLoan(idAccount, loanDto);
     }
 
     @Test
@@ -71,17 +71,17 @@ public class LoanControllerTest {
         Long idAccount = 1L;
         LoanDto loanDto = new LoanDto(
                 1L, BigDecimal.valueOf(1000), BigDecimal.valueOf(0.05),
-                LocalDateTime.now(), LocalDateTime.now().plusMonths(12), "1", 1L
+                LocalDateTime.now(), LocalDateTime.now().plusMonths(12), LoanStatus.ACTIVE
         );
         when(loanService.getLoanDetailsByIdAccount(idAccount)).thenReturn(Optional.of(loanDto));
 
         // Act
-        ResponseEntity<Optional<LoanDto>> response = loanController.getLoanDetails(idAccount);
+        ResponseEntity<LoanDto> response = loanController.getLoanDetails(idAccount);
 
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertTrue(response.getBody().isPresent());
-        assertEquals(loanDto, response.getBody().get());
+        assertNotNull(response.getBody());
+        assertEquals(loanDto, response.getBody());
     }
 
     @Test
@@ -91,7 +91,7 @@ public class LoanControllerTest {
         when(loanService.getLoanDetailsByIdAccount(idAccount)).thenReturn(Optional.empty());
 
         // Act
-        ResponseEntity<Optional<LoanDto>> response = loanController.getLoanDetails(idAccount);
+        ResponseEntity<LoanDto> response = loanController.getLoanDetails(idAccount);
 
         // Assert
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());

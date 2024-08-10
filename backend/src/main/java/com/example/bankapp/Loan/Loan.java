@@ -33,7 +33,7 @@ public class Loan {
     private LocalDateTime endDate;
 
     @Column(name = "status", nullable = false)
-    private String status; // 1 - active, 0 - inactive
+    private LoanStatus status; // 1 - active, 0 - inactive
 
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -42,13 +42,9 @@ public class Loan {
 
     @PrePersist
     public void prePersist() {
-//        this.name = "loan" + this.idLoan;
-
-        if (this.endDate.isAfter(this.startDate) && LocalDateTime.now().isBefore(endDate)) {
-            this.status = "1";
-        } else {
-            this.status = "0";
-        }
+        this.status = (this.endDate.isAfter(this.startDate) && LocalDateTime.now().isBefore(endDate))
+                ? LoanStatus.ACTIVE
+                : LoanStatus.INACTIVE;
     }
 
 }

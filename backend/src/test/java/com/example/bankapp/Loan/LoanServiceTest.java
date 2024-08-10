@@ -42,7 +42,7 @@ public class LoanServiceTest {
     public void setUp() {
         loanDto = new LoanDto(
                 1L, BigDecimal.valueOf(1000), BigDecimal.valueOf(0.05),
-                LocalDateTime.now(), LocalDateTime.now().plusMonths(12), "1", 1L
+                LocalDateTime.now(), LocalDateTime.now().plusMonths(12), LoanStatus.ACTIVE
         );
 
         account = new Account();
@@ -54,7 +54,7 @@ public class LoanServiceTest {
         loan.setInterestRate(BigDecimal.valueOf(0.05));
         loan.setStartDate(LocalDateTime.now());
         loan.setEndDate(LocalDateTime.now().plusMonths(12));
-        loan.setStatus("1");
+        loan.setStatus(LoanStatus.ACTIVE);
         loan.setAccount(account);
     }
 
@@ -65,7 +65,7 @@ public class LoanServiceTest {
         when(loanMapper.toEntity(any(LoanDto.class))).thenReturn(loan);
 
         // Act
-        loanService.createLoan(loanDto);
+        loanService.createLoan(account.getIdAccount(), loanDto);
 
         // Assert
         verify(accountService, times(1)).grantLoan(eq(1L), eq(BigDecimal.valueOf(1000)));
@@ -76,7 +76,7 @@ public class LoanServiceTest {
     @Test
     public void testGetLoanDetailsByIdAccount_Success() {
         // Arrange
-        when(loanRepository.findByAccount_IdAccountAndStatus(anyLong(), eq("1"))).thenReturn(Optional.of(loan));
+        when(loanRepository.findByAccount_IdAccountAndStatus(anyLong(), eq(LoanStatus.ACTIVE))).thenReturn(Optional.of(loan));
         when(loanMapper.toDto(any(Loan.class))).thenReturn(loanDto);
 
         // Act
@@ -90,12 +90,12 @@ public class LoanServiceTest {
     @Test
     public void testGetLoanDetailsByIdAccount_NotFound() {
         // Arrange
-        when(loanRepository.findByAccount_IdAccountAndStatus(anyLong(), eq("1"))).thenReturn(Optional.empty());
+        when(loanRepository.findByAccount_IdAccountAndStatus(anyLong(), eq(LoanStatus.ACTIVE))).thenReturn(Optional.empty());
 
         // Act
         Optional<LoanDto> result = loanService.getLoanDetailsByIdAccount(1L);
 
         // Assert
-        assertFalse(result.isPresent());
+        assertTrue(result.isEmpty());
     }
 }
