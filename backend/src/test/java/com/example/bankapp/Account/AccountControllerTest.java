@@ -22,10 +22,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 public class AccountControllerTest {
-
-    @Mock
-    private AccountRepository accountRepository;
-
     @Mock
     private AccountService accountService;
 
@@ -102,7 +98,7 @@ public class AccountControllerTest {
                 BigDecimal.valueOf(10000),
                 LocalDateTime.now(),
                 "default",
-                "1");
+                AccountStatus.ACTIVE);
         when(accountService.getAccountDetailsById(idAccount)).thenReturn(Optional.of(accountDto));
 
         // Act

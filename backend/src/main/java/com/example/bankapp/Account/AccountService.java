@@ -29,7 +29,7 @@ public class AccountService {
         account.setPassword(userRegisterDTO.password());
         account.setBalance(BigDecimal.valueOf(10000)); // Initial balance set to 10000 PLN
         account.setType("default"); // TODO frontend - add account types
-        account.setStatus("1");
+        account.setStatus(AccountStatus.ACTIVE);
         account.setUser(user);
 
         return accountRepository.save(account);

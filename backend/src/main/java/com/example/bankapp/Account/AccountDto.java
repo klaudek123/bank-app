@@ -11,5 +11,5 @@ public record AccountDto(
         BigDecimal balance,
         LocalDateTime dateOfCreation,
         String type,
-        String status // 1 = active, 0 = inactive
+        AccountStatus status
 ) {}

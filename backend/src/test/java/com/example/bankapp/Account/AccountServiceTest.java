@@ -42,7 +42,7 @@ public class AccountServiceTest {
         account.setPassword("password");
         account.setBalance(BigDecimal.valueOf(10000));
         account.setType("default");
-        account.setStatus("1");
+        account.setStatus(AccountStatus.ACTIVE);
         account.setUser(user);
 
         when(accountRepository.save(any(Account.class))).thenReturn(account);

@@ -37,11 +37,12 @@ public class Account {
     @Column(name = "date_of_creation", nullable = false, columnDefinition = "DATE")
     private LocalDateTime dateOfCreation;
 
-    @Column(name = "type", length = 15)
+    @Column(name = "type", length = 15, nullable = false)
     private String type;
 
-    @Column(name = "status", length = 1)
-    private String status; // 1 = active, 0 = inactive
+    @Column(name = "status", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private AccountStatus status;
 
     @ManyToOne
     @JoinColumn(name = "id_user", nullable = false)

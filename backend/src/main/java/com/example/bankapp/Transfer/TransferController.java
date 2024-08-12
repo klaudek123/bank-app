@@ -40,15 +40,6 @@ public class TransferController {
     }
 
 
-    @GetMapping("/{idTransfer}")
-    public ResponseEntity<TransferDto> getTransferDetails(@PathVariable Long idAccount, @PathVariable Long idTransfer) {
-        return transferService.getTransferById(idTransfer)
-                .filter(transfer -> transfer.getAccount().getIdAccount().equals(idAccount))
-                .map(transferMapper::toDto)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
     @PostMapping()
     public ResponseEntity<String> makeTransfer(@PathVariable Long idAccount, @RequestBody TransferDto transferDTO) {
         if (transferDTO.recipient().equals(transferDTO.sender())) {
@@ -60,6 +51,15 @@ public class TransferController {
             return ResponseEntity.ok("Transfer made successfully");
         }
 
+    }
+
+    @GetMapping("/{idTransfer}")
+    public ResponseEntity<TransferDto> getTransferDetails(@PathVariable Long idAccount, @PathVariable Long idTransfer) {
+        return transferService.getTransferById(idTransfer)
+                .filter(transfer -> transfer.getAccount().getIdAccount().equals(idAccount))
+                .map(transferMapper::toDto)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
 
