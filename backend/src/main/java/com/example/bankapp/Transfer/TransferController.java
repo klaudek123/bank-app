@@ -7,65 +7,31 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/transfers")
+@RequestMapping("/accounts/{idAccount}/transfers")
 public class TransferController {
     private final TransferService transferService;
-    private final TransferRepository transferRepository;
     private final TransferMapper transferMapper;
 
-    // Constructor initializing TransferController with required services
-    public TransferController(TransferService transferService, TransferRepository transferRepository, TransferMapper transferMapper) {
+    public TransferController(TransferService transferService, TransferMapper transferMapper) {
         this.transferService = transferService;
-        this.transferRepository = transferRepository;
         this.transferMapper = transferMapper;
     }
 
-    // Endpoint to retrieve all transfers
     @GetMapping()
-    public List<TransferDto> getAll() {
+    public ResponseEntity<List<TransferDto>> getTransfersByAccount(@PathVariable Long idAccount,
+                                                                   @RequestParam(value = "type", required = false) String type) {
+        List<TransferDto> transfers;
 
-        return transferRepository.findAll().stream()
-                .map(transferMapper::toDto)
-                .collect(Collectors.toList());
-    }
-
-
-    @GetMapping("/transfer/{idTransfer}")
-    public ResponseEntity<TransferDto> getTransferDetails(@PathVariable Long idTransfer) {
-        return transferRepository.findById(idTransfer)
-                .map(transferMapper::toDto)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    // Endpoint to initiate a transfer
-    @PostMapping()
-    public ResponseEntity<String> makeTransfer(@RequestBody TransferDto transferDTO) {
-        if (transferDTO.recipient().equals(transferDTO.sender())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Sender and recipient cannot be the same");
-        } else if (transferDTO.amount().compareTo(BigDecimal.ZERO) <= 0) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Transfer amount must be greater than zero");
+        if ("sent".equalsIgnoreCase(type)) {
+            transfers = transferService.getTransfersBySender(idAccount);
+        } else if ("received".equalsIgnoreCase(type)) {
+            transfers = transferService.getTransfersByRecipient(idAccount);
         } else {
-            try {
-                transferService.makeTransfer(transferDTO);
-                return ResponseEntity.ok("Transfer made successfully");
-            } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error occurred");
-            }
+            transfers = transferService.getTransfersByAccount(idAccount);
         }
 
-    }
-
-    // Endpoint to retrieve all transfers by account ID
-    @GetMapping("/account/{idAccount}")
-    public ResponseEntity<List<TransferDto>> getAllByIdAccount(@PathVariable Long idAccount) {
-        List<TransferDto> transfers = transferService.getTransfersByIdAccount(idAccount).stream()
-                .map(transferMapper::toDto)
-                .collect(Collectors.toList());
         if (!transfers.isEmpty()) {
             return ResponseEntity.ok(transfers);
         } else {
@@ -73,15 +39,28 @@ public class TransferController {
         }
     }
 
-    // Endpoint to retrieve all transfers sent from an account
-    @GetMapping("/sent")
-    public ResponseEntity<Optional<Transfer>> getAllBySender(@RequestParam("sender") Long idAccount) {
-        return transferService.getTransfersBySender(idAccount);
+
+    @GetMapping("/{idTransfer}")
+    public ResponseEntity<TransferDto> getTransferDetails(@PathVariable Long idAccount, @PathVariable Long idTransfer) {
+        return transferService.getTransferById(idTransfer)
+                .filter(transfer -> transfer.getAccount().getIdAccount().equals(idAccount))
+                .map(transferMapper::toDto)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    // Endpoint to retrieve all transfers received by an account
-    @GetMapping("/received")
-    public ResponseEntity<Optional<Transfer>> getAllByRecipient(@RequestParam("recipient") Long idAccount) {
-        return transferService.getTransfersByRecipient(idAccount);
+    @PostMapping()
+    public ResponseEntity<String> makeTransfer(@PathVariable Long idAccount, @RequestBody TransferDto transferDTO) {
+        if (transferDTO.recipient().equals(transferDTO.sender())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Sender and recipient cannot be the same");
+        } else if (transferDTO.amount().compareTo(BigDecimal.ZERO) <= 0) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Transfer amount must be greater than zero");
+        } else {
+            transferService.makeTransfer(idAccount, transferDTO);
+            return ResponseEntity.ok("Transfer made successfully");
+        }
+
     }
+
+
 }

@@ -2,10 +2,7 @@ package com.example.bankapp.Investment;
 
 import com.example.bankapp.Account.Account;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -47,6 +44,8 @@ public class Investment {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_account", nullable = false)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Account account;
 
 }

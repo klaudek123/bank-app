@@ -9,11 +9,9 @@ import java.util.Optional;
 @Repository
 public interface TransferRepository extends JpaRepository<Transfer, Long> {
 
-    Transfer findByIdTransfer(Long idTransfer);
+    List<Transfer> findBySenderAndAccount_IdAccount(Long sender, Long idAccount);
 
-    Optional<Transfer> findBySenderAndAccount_IdAccount(Long sender, Long idAccount);
-
-    Optional<Transfer> findByRecipientAndAccount_IdAccount(Long recipient, Long idAccount);
+    List<Transfer> findByRecipientAndAccount_IdAccount(Long recipient, Long idAccount);
 
     List<Transfer> findByAccount_IdAccountOrderByDateDesc(Long idAccount);
 

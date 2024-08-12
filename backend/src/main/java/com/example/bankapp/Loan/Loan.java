@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
 @Table(name = "loan")
 public class Loan {
     @Id
@@ -33,11 +32,13 @@ public class Loan {
     private LocalDateTime endDate;
 
     @Column(name = "status", nullable = false)
-    private LoanStatus status; // 1 - active, 0 - inactive
-
+    @Enumerated(EnumType.STRING)
+    private LoanStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_account", nullable = false)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Account account;
 
     @PrePersist

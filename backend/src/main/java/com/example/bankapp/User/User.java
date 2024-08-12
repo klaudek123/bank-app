@@ -2,10 +2,7 @@ package com.example.bankapp.User;
 
 import com.example.bankapp.Account.Account;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -37,5 +34,7 @@ public class User {
     private String address;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Set<Account> accounts;
 }
