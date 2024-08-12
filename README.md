@@ -147,11 +147,9 @@ This repository contains the backend code for a simple bank application. The app
   - `POST /accounts/login`: Account authentication to log into the system.
 
 - **Transfers**:
-  - `GET /transfers`: Retrieve all transfers.
-  - `POST /transfers`: Initiate a transfer.
-  - `GET /transfers/{idAccount}`: Get all transfers by account ID.
-  - `GET /transfers/sent`: Get all transfers sent by an account.
-  - `GET /transfers/received`: Get all transfers received by an account.
+  - `GET  /accounts/{idAccount}/transfers?type={type}`: Retrieve all transfers with optional parameter - type (sent, received) for resource filtering.
+  - `POST /accounts/{idAccount}/transfers`: Create a new transfer.
+  - `GET /accounts/{idAccount}/transfers/{idTransfer}`: Get transfer details by transfer ID.
 
 - **Loans**:
   - `GET /accounts/{idAccount}/loans`: Get loan details by account ID.
