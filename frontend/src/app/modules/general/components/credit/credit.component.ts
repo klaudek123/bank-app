@@ -45,16 +45,16 @@ export class CreditComponent {
   
 
   onSubmit() {
+    const idAccount = localStorage.getItem('idAccount');
     if (this.loanForm.valid) {
       const loanDto = {
         amount: this.loanForm.get('loanAmount')?.value,
         interestRate: this.loanInterest,
-        startDate: this.loanForm.get('startDate')?.value,
-        endDate: this.loanForm.get('endDate')?.value,
-        idAccount: localStorage.getItem('idAccount')
+        startDate: this.formatDate(this.loanForm.get('startDate')?.value), 
+        endDate: this.formatDate(this.loanForm.get('endDate')?.value) 
       };
 
-      this.axiosService.request('POST', 'http://localhost:8080/loans', loanDto)
+      this.axiosService.request('POST', `http://localhost:8080/accounts/${idAccount}/loans`, loanDto)
         .then((response: any) => {
           if (response && response.status === 200) {
             window.alert(response.data);
@@ -73,5 +73,11 @@ export class CreditComponent {
     } else {
       window.alert('Błędnie wybrane wartości pożyczki!');
     }
+  }
+
+
+  formatDate(date: string): string {
+    const formattedDate = new Date(date);
+    return formattedDate.toISOString().slice(0, 19).replace('T', ' ');
   }
 }

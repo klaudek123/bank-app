@@ -7,7 +7,6 @@ export interface Investment {
   startDate: Date;
   endDate: Date;
   status: InvestmentStatus;
-  idAccount: number;
 }
 
 export enum InvestmentType {

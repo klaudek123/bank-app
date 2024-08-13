@@ -22,6 +22,7 @@ public class InvestmentController {
 
     @PostMapping()
     public ResponseEntity<String> createInvestment(@PathVariable Long idAccount, @RequestBody InvestmentDto investmentDto){
+        System.out.println(investmentDto.endDate());
         if(!accountService.hasSufficientBalance(idAccount, investmentDto.amount())){
             return ResponseEntity.status(HttpStatus.CONFLICT).body("There are no funds in the account to make the investment.");
         }

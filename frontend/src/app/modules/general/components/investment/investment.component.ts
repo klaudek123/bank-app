@@ -11,11 +11,11 @@ interface InterestRateMap {
 @Component({
   selector: 'app-investment',
   templateUrl: './investment.component.html',
-  styleUrl: './investment.component.css'
+  styleUrls: ['./investment.component.css']
 })
 export class InvestmentComponent {
   investmentForm: FormGroup = new FormGroup({});
-  minAmount: number = 1000; // Przykładowe minimalne i maksymalne wartości
+  minAmount: number = 1000;
   maxAmount: number = 100000;
   minDurationMonths: number = 3;
   maxDurationMonths: number = 60;
@@ -35,7 +35,6 @@ export class InvestmentComponent {
 
 
   createForm() {
-    // Utwórz obiekt daty rok do przodu
     const today = new Date();
     const endDateValue = new Date(today);
     endDateValue.setMonth(endDateValue.getMonth() + 3);
@@ -43,17 +42,17 @@ export class InvestmentComponent {
     this.investmentForm = this.fb.group({
       type: ['FUND', Validators.required],
       amount: [1000, [Validators.required, Validators.min(this.minAmount), Validators.max(this.maxAmount)]],
-      // interestRate: [5, [Validators.required, Validators.min(0)]],
       interestRate: [{ value: this.interestRateMap['FUND'], disabled: true }, Validators.required],
       durationMonths: [this.minDurationMonths, [Validators.required, Validators.min(this.minDurationMonths), Validators.max(this.maxDurationMonths)]],
       startDate: [today, Validators.required],
-      endDate: [{ value: endDateValue, disabled: true }, Validators.required] // Ustawienie daty zakończenia
+      endDate: [{ value: endDateValue, disabled: true }, Validators.required]
     });
     this.onChanges();
   }
 
   onChanges() {
-    this.investmentForm.get('type')?.valueChanges.subscribe(type => {
+    this.investmentForm.get('type')?.valueChanges
+    .subscribe(type => {
       const newInterestRate = this.interestRateMap[type];
       this.investmentForm.get('interestRate')?.setValue(newInterestRate);
     });
@@ -62,24 +61,24 @@ export class InvestmentComponent {
       const startDate = new Date();
       const endDate = new Date(startDate);
       endDate.setMonth(startDate.getMonth() + months);
-      this.investmentForm.get('endDate')?.setValue(endDate.toISOString()); // Ustaw datę zakończenia w formacie "yyyy-MM-dd"
+      this.investmentForm.get('endDate')?.setValue(endDate); 
     });
   }
 
   onSubmit(): void {
     if (this.investmentForm.valid) {
-      // Przygotowanie danych do wysłania na serwer lub inna logika
+      const idAccount = localStorage.getItem("idAccount");
+
       const investmentDto = {
         type: this.investmentForm.get('type')?.value,
         amount: this.investmentForm.get('amount')?.value,
         interestRate: this.investmentForm.get('interestRate')?.value,
-        startDate: this.formatEndDate(this.investmentForm.get('startDate')?.value),
-        endDate: this.formatEndDate(this.investmentForm.get('endDate')?.value),
-        idAccount: localStorage.getItem('idAccount')
+        startDate: this.formatDate(this.investmentForm.get('startDate')?.value), 
+        endDate: this.formatDate(this.investmentForm.get('endDate')?.value) 
       };
       
       console.log('Wysłanie danych inwestycji:', investmentDto);
-      this.axiosService.request('POST', `http://localhost:8080/investments`, investmentDto)
+      this.axiosService.request('POST', `http://localhost:8080/accounts/${idAccount}/investments`, investmentDto)
       .then((response: any) => {
         if (response && response.status === 200) {
           window.alert(response.data);
@@ -102,7 +101,7 @@ export class InvestmentComponent {
 
   }
 
-  formatEndDate(date: string): string {
+  formatDate(date: string): string {
     const formattedDate = new Date(date);
     return formattedDate.toISOString().slice(0, 19).replace('T', ' ');
   }

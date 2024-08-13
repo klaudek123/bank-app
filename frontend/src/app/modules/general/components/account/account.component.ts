@@ -21,7 +21,7 @@ export class AccountComponent {
     console.log("idAccount = " + idAccount);
     if (idAccount) {
       // Wyślij żądanie do serwera, aby pobrać dane użytkownika na podstawie identyfikatora konta
-      this.axiosService.request('GET', `http://localhost:8080/transfers/account/${idAccount}`, {})
+      this.axiosService.request('GET', `http://localhost:8080/accounts/${idAccount}/transfers`, {})
         .then(
           (response) => {
             console.log(response);

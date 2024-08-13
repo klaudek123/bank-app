@@ -29,6 +29,8 @@ public class InvestmentService {
 
         Account account = accountService.getAccountById(idAccount);
         investment.setAccount(account);
+        investment.setStatus(InvestmentStatus.ACTIVE);
+        investment.setName("default");
 
         investmentRepository.save(investment);
 

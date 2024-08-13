@@ -35,19 +35,19 @@ export class TransferComponent {
     }
 
   const amount = this.amountZloty + this.amountGrosz / 100;
-
-
+  
+  const idAccount = localStorage.getItem("idAccount")
+  
   const transferDTO = {
     recipient: this.recipient,
     sender: localStorage.getItem("accountNumer"),
     title: this.title,
-    amount: amount,
-    idAccount: localStorage.getItem("idAccount")
+    amount: amount
   };
 
   console.log(transferDTO)
 
-  this.axiosService.request('POST', `http://localhost:8080/transfers`, transferDTO)
+  this.axiosService.request('POST', `http://localhost:8080/accounts/${idAccount}/transfers`, transferDTO)
   .then(
     (response) => {
       console.log(response);

@@ -27,6 +27,7 @@ public class LoanService {
 
         Loan loan = loanMapper.toEntity(loanDto);
         loan.setAccount(account);
+        loan.setStatus(LoanStatus.ACTIVE);
         loanRepository.save(loan);
     }
 

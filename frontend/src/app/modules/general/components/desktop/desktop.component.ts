@@ -11,13 +11,13 @@ interface AccountInfo {
   deposit: number;
   loan: number;
   accountBalance: number;
-  // Inne pola związane z informacjami o rachunku
+  status: string;
 }
 
 @Component({
   selector: 'app-desktop',
   templateUrl: './desktop.component.html',
-  styleUrl: './desktop.component.css'
+  styleUrls: ['./desktop.component.css']
 })
 export class DesktopComponent {
   //@Input() accountInfo: AccountInfo;
@@ -28,8 +28,8 @@ export class DesktopComponent {
     currency: 'NaN',
     deposit: NaN,
     loan: NaN,
-    accountBalance: NaN
-
+    accountBalance: NaN,
+    status: 'NaN'
   };
   investments: Investment[] = []; 
 
@@ -47,6 +47,7 @@ export class DesktopComponent {
           (response) => {
             console.log(response);
             // Ustaw dane użytkownika w komponencie nagłówka
+            this.accountInfo.owner = response.data.idAccount;
             this.accountInfo.accountBalance = response.data.balance;
             this.accountInfo.accountNumer = response.data.number;
             localStorage.setItem('accountNumer', response.data.number);
@@ -63,33 +64,15 @@ export class DesktopComponent {
           }
         );
         console.log("idAccount = " + idAccount);
-        this.axiosService.request('GET', `http://localhost:8080/investments/${idAccount}`, {})
+        this.axiosService.request('GET', `http://localhost:8080/accounts/${idAccount}/investments`, {})
         .then((response) => {
-            console.log(response);
-            // przypisywanie do tablicy obiektów wartości
-          //   if (Array.isArray(response.data)) {
-          //     // Jeśli tak, przypisz odpowiedź do tablicy transfers
-          //     this.investments = response.data.map((investment: any) => {
-          //       investment.startDate = this.formatDate(investment.startDate);
-          //       return investment;
-          //     });
-          //   } else {
-          //     // Jeśli nie, umieść pojedynczy obiekt w tablicy transfers
-          //     // this.investments = [response.data];
-          //     // this.investments[0].startDate = this.formatDate(this.investments[0].startDate);
-          //     // this.investments = response.data.map((investment: any) => {
-          //     //   investment.startDate = this.formatDate(investment.startDate);
-          //     //   return investment;
-          //     // });
-          // }
+            // console.log(response.data[0].startDate);
+            
           if (Array.isArray(response.data)) {
-            // Jeśli tak, przypisz odpowiedź do tablicy transfers
             this.investments = response.data;
           } else {
-            // Jeśli nie, umieść pojedynczy obiekt w tablicy transfers
             this.investments = [response.data];
           }
-
         }
         ).catch(
           (error) => {
@@ -102,7 +85,7 @@ export class DesktopComponent {
           }
         );
 
-        this.axiosService.request('GET', `http://localhost:8080/loans/${idAccount}`, {})
+        this.axiosService.request('GET', `http://localhost:8080/accounts/${idAccount}/loans`, {})
         .then(
           (response) => {
             console.log(response);
@@ -122,17 +105,5 @@ export class DesktopComponent {
     }
     
  }
- formatDate(date: string): string {
-  const parsedDate = new Date(date);
-  const options: Intl.DateTimeFormatOptions = {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit'
-  };
-  return parsedDate.toLocaleString('pl-PL', options);
-}
 
 }
