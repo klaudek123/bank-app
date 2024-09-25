@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: java-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: java-backend
+  template:
+    metadata:
+      labels:
+        app: java-backend
+    spec:
+      containers:
+      - name: java-backend
+        image: klaudek123/java-backend:latest
+        ports:
+        - containerPort: 8080
+        env:
+        - name: SPRING_DATASOURCE_URL
+          value: jdbc:mysql://mysql:3306/bankdb?allowPublicKeyRetrieval=true&useSSL=false
+        - name: SPRING_DATASOURCE_USERNAME
+          value: root
+        - name: SPRING_DATASOURCE_PASSWORD
+          value: klaudiusz
+        resources:
+          limits:
+            memory: "512Mi"  
+            cpu: "500m"      
+          requests:
+            memory: "256Mi"  
+            cpu: "250m"      
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: java-backend
+spec:
+  selector:
+    app: java-backend
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: ClusterIP

@@ -1,7 +1,7 @@
 .content {
     max-height: 90%;
-    margin-top: 10px;
-    border-radius: 2%; /* Responsywne zaokrąglenie */
+    margin-top: 2%;
+    border-radius: 8px; /* Responsywne zaokrąglenie */
   }
   
   .section {

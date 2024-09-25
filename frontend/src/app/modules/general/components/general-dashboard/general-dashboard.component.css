@@ -18,7 +18,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    filter: brightness(0.85); /* zmniejszenie jasności do 80% */
+    filter: brightness(0.85); /* zmniejszenie jasności do 85% */
 }
 
 .header {
@@ -59,6 +59,8 @@
     text-align: left;
     width: 80%;
     border-radius: 0 10px 10px 0;
+    overflow: auto;
+    max-height: 100%;
 }
 
 .footer {
