@@ -8,6 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -27,10 +28,14 @@ public class AccountServiceTest {
     @Mock
     private AccountMapper accountMapper;
 
+    @Mock
+    private PasswordEncoder passwordEncoder;
+
     @InjectMocks
     private AccountService accountService;
 
-    @Test
+
+        @Test
     public void testGenerateAccount() {
         // Arrange
         User user = new User();
@@ -86,7 +91,14 @@ public class AccountServiceTest {
         // Arrange
         Long idAccount = 1L;
         String password = "password";
-        when(accountRepository.findByIdAccountAndPassword(idAccount, password)).thenReturn(Optional.of(new Account()));
+        String hashedPassword = passwordEncoder.encode(password);
+
+        Account account = new Account();
+        account.setIdAccount(idAccount);
+        account.setPassword(hashedPassword);
+
+        when(accountRepository.findById(idAccount)).thenReturn(Optional.of(account));
+        when(passwordEncoder.matches(password, hashedPassword)).thenReturn(true);
 
         // Act
         boolean result = accountService.authenticateLogin(idAccount, password);
@@ -100,7 +112,6 @@ public class AccountServiceTest {
         // Arrange
         Long idAccount = 1L;
         String password = "wrongPassword";
-        when(accountRepository.findByIdAccountAndPassword(idAccount, password)).thenReturn(Optional.empty());
 
         // Act
         boolean result = accountService.authenticateLogin(idAccount, password);

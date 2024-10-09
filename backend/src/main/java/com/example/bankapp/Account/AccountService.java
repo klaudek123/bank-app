@@ -6,6 +6,8 @@ import com.example.bankapp.Mappers.AccountMapper;
 import com.example.bankapp.User.User;
 import com.example.bankapp.User.UserRegisterDto;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -17,16 +19,19 @@ import java.util.Optional;
 public class AccountService {
     private final AccountRepository accountRepository;
     private final AccountMapper accountMapper;
+    private final PasswordEncoder passwordEncoder;
 
-    public AccountService(AccountRepository accountRepository, AccountMapper accountMapper) {
+    public AccountService(AccountRepository accountRepository, AccountMapper accountMapper, PasswordEncoder passwordEncoder) {
         this.accountRepository = accountRepository;
         this.accountMapper = accountMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public Account generateAccount(UserRegisterDto userRegisterDTO, User user) {
         Account account = new Account();
         account.setNumber(generateUniqueAccountNumber());
-        account.setPassword(userRegisterDTO.password());
+        String encryptedPassword = passwordEncoder.encode(userRegisterDTO.password());
+        account.setPassword(encryptedPassword);
         account.setBalance(BigDecimal.valueOf(10000)); // Initial balance set to 10000 PLN
         account.setType("default"); // TODO frontend - add account types
         account.setStatus(AccountStatus.ACTIVE);
@@ -41,8 +46,15 @@ public class AccountService {
     }
 
     public boolean authenticateLogin(Long idAccount, String password) {
-        return accountRepository.findByIdAccountAndPassword(idAccount, password).isPresent();
+        Optional<Account> accountOptional = accountRepository.findById(idAccount);
+
+        if(accountOptional.isPresent()) {
+            Account account = accountOptional.get();
+            return passwordEncoder.matches(password, account.getPassword());
+        }
+        return false;
     }
+
 
     public Long getIdUserByIdAccount(Long idAccount) {
         return accountRepository.getIdUserByIdAccount(idAccount);

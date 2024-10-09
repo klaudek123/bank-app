@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AxiosService } from '../../../../services/axios.service';
 import { Router } from '@angular/router';
+import { environment } from '../../../../../environments/environment';
 
 interface InterestRateMap {
   [key: string]: number;
@@ -78,7 +79,7 @@ export class InvestmentComponent {
       };
       
       console.log('Wysłanie danych inwestycji:', investmentDto);
-      this.axiosService.request('POST', `http://localhost:8080/accounts/${idAccount}/investments`, investmentDto)
+      this.axiosService.request('POST', `${environment.apiUrl}/accounts/${idAccount}/investments`, investmentDto)
       .then((response: any) => {
         if (response && response.status === 200) {
           window.alert(response.data);

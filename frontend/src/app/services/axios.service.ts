@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import axios, { AxiosInstance } from 'axios';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,7 @@ export class AxiosService {
 
   constructor() {
     this.axiosInstance = axios.create({
-      baseURL: 'http://localhost:8080',
+      baseURL: `${environment.apiUrl}`,
       headers: {
         'Content-Type': 'application/json'
       }

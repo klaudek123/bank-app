@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-register',
@@ -85,7 +86,7 @@ export class RegisterComponent {
 
     console.log(registerDTO);
 
-    this.http.post<any>('http://localhost:8080/users', registerDTO)
+    this.http.post<any>(`${environment.apiUrl}/users`, registerDTO)
       .subscribe(
         (response) => {
           window.alert("Udało się założyć konto. Numer klienta to: "+ response);

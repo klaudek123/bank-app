@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { AxiosService } from '../../../../services/axios.service';
 import { Router } from '@angular/router';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-transfer',
@@ -47,7 +48,7 @@ export class TransferComponent {
 
   console.log(transferDTO)
 
-  this.axiosService.request('POST', `http://localhost:8080/accounts/${idAccount}/transfers`, transferDTO)
+  this.axiosService.request('POST', `${environment.apiUrl}/accounts/${idAccount}/transfers`, transferDTO)
   .then(
     (response) => {
       console.log(response);

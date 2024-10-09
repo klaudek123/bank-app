@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AxiosService } from '../../../../services/axios.service';
+import { environment } from '../../../../../environments/environment';
 
 
 @Component({
@@ -54,7 +55,7 @@ export class CreditComponent {
         endDate: this.formatDate(this.loanForm.get('endDate')?.value) 
       };
 
-      this.axiosService.request('POST', `http://localhost:8080/accounts/${idAccount}/loans`, loanDto)
+      this.axiosService.request('POST', `${environment.apiUrl}/accounts/${idAccount}/loans`, loanDto)
         .then((response: any) => {
           if (response && response.status === 200) {
             window.alert(response.data);

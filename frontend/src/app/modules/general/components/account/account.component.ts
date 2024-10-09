@@ -1,6 +1,7 @@
 import { Component, OnInit  } from '@angular/core';
 import { Transfer } from '../../../../models/transfer.model';
 import { AxiosService } from '../../../../services/axios.service';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-account',
@@ -21,7 +22,7 @@ export class AccountComponent {
     console.log("idAccount = " + idAccount);
     if (idAccount) {
       // Wyślij żądanie do serwera, aby pobrać dane użytkownika na podstawie identyfikatora konta
-      this.axiosService.request('GET', `http://localhost:8080/accounts/${idAccount}/transfers`, {})
+      this.axiosService.request('GET', `${environment.apiUrl}/accounts/${idAccount}/transfers`, {})
         .then(
           (response) => {
             console.log(response);

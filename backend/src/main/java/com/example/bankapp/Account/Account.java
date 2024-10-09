@@ -28,7 +28,7 @@ public class Account {
     @Column(name = "number", nullable = false, unique = true)
     private Long number;
 
-    @Column(name = "password", nullable = false, length = 50)
+    @Column(name = "password", nullable = false, length = 72)
     private String password;
 
     @Column(name = "balance", nullable = false, precision = 10, scale = 2)

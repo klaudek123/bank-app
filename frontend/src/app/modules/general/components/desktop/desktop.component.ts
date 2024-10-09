@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AxiosService } from '../../../../services/axios.service';
 import { Investment } from '../../../../models/investment.model';
+import { environment } from '../../../../../environments/environment';
 
 interface AccountInfo {
   owner: string;
@@ -39,7 +40,7 @@ export class DesktopComponent {
     const idAccount = localStorage.getItem('idAccount');
     console.log("idAccount = " + idAccount);
     if (idAccount) {
-      this.axiosService.request('GET', `http://localhost:8080/accounts/${idAccount}`, {})
+      this.axiosService.request('GET', `${environment.apiUrl}/accounts/${idAccount}`, {})
         .then(
           (response) => {
             console.log(response);
@@ -61,7 +62,7 @@ export class DesktopComponent {
           }
         );
         console.log("idAccount = " + idAccount);
-        this.axiosService.request('GET', `http://localhost:8080/accounts/${idAccount}/investments`, {})
+        this.axiosService.request('GET', `${environment.apiUrl}/accounts/${idAccount}/investments`, {})
         .then((response) => {
             // console.log(response.data[0].startDate);
             
@@ -82,7 +83,7 @@ export class DesktopComponent {
           }
         );
 
-        this.axiosService.request('GET', `http://localhost:8080/accounts/${idAccount}/loans`, {})
+        this.axiosService.request('GET', `${environment.apiUrl}/accounts/${idAccount}/loans`, {})
         .then(
           (response) => {
             console.log(response);

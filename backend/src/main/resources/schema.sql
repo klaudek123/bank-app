@@ -20,12 +20,6 @@ CREATE TABLE IF NOT EXISTS account (
                          FOREIGN KEY (id_user) REFERENCES user_table(personal_id)
 );
 
-SET @exists = (SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'bankdb' AND table_name = 'account');
-
-IF @exists = 0 THEN
-ALTER TABLE account AUTO_INCREMENT = 1000001;
-END IF;
-
 CREATE TABLE IF NOT EXISTS transfer (
                           id_transfer  BIGINT AUTO_INCREMENT PRIMARY KEY,
                           sender       BIGINT NOT NULL,

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AxiosService } from '../../../../services/axios.service';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-header',
@@ -20,7 +21,7 @@ export class HeaderComponent {
      console.log("idAccount = "+idAccount); // działa już
      if (idAccount) {
        // Wyślij żądanie do serwera, aby pobrać dane użytkownika na podstawie identyfikatora konta
-       this.axiosService.request('GET', `http://localhost:8080/users/${idAccount}`, {})
+       this.axiosService.request('GET', `${environment.apiUrl}/users/${idAccount}`, {})
         .then(
            (response) => {
             console.log(response);
