@@ -2,6 +2,8 @@ package com.example.bankapp.User;
 
 import com.example.bankapp.Account.Account;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -27,6 +29,8 @@ public class User {
     @Column(name = "date_of_birth", nullable = false, columnDefinition = "DATE")
     private LocalDate dateOfBirth;
 
+    @Email
+    @NotBlank
     @Column(name = "email", nullable = false, length = 30)
     private String email;
 

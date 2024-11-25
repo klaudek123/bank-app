@@ -1,6 +1,25 @@
 <div class="transfer-history">
-  <div class="transfer-history-header">
-    <h2>Historia Transakcji</h2>
+    <div class="transfer-history-header">
+      <h2>Historia Transakcji</h2>
+      <div>
+        <select id="filterType" class="filter" [(ngModel)]="selectedFilter" (ngModelChange)="onFilterTypeChange()">
+          <option value="">Wybierz filtr</option>
+          <option value="date">Data</option>
+          <option value="sender">Nadawca</option>
+          <option value="recipient">Odbiorca</option>
+          <option value="title">Tytułem</option>
+          <option value="amount">Kwota</option>
+        </select>
+<br/>
+<input type="text" class="filter" [(ngModel)]="filterValue" placeholder="Wartość filtra" 
+  *ngIf="selectedFilter === 'sender' || selectedFilter === 'recipient' || selectedFilter === 'title' || selectedFilter === 'amount'">
+<div *ngIf="selectedFilter === 'date'" class="filter">
+  <label for="startDate">Od:</label>
+  <input type="date" id="startDate" [(ngModel)]="startDate">
+  <label for="endDate">Do:</label>
+  <input type="date" id="endDate" [(ngModel)]="endDate">
+</div>
+      </div>
   </div>
   <div class="transfer-history-table">
     <table>
@@ -14,8 +33,8 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let transfer of transfers">
-          <td>{{ transfer.date }}</td>
+        <tr *ngFor="let transfer of filteredTransfers()">
+          <td>{{ transfer.date | date:'dd.MM.yyyy' }}</td>
           <td>{{ transfer.sender }}</td>
           <td>{{ transfer.recipient }}</td>
           <td>{{ transfer.title }}</td>

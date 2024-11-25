@@ -6,7 +6,7 @@ import { environment } from '../../../../../environments/environment';
 @Component({
   selector: 'app-transfer',
   templateUrl: './transfer.component.html',
-  styleUrl: './transfer.component.css'
+  styleUrls: ['./transfer.component.css']
 })
 export class TransferComponent {
   recipient: number = NaN;
@@ -15,7 +15,10 @@ export class TransferComponent {
   amountGrosz: number = NaN;
   idAccount: number = 0;
 
-  constructor(private router: Router, private axiosService: AxiosService) {}
+  constructor(
+    private router: Router,
+    private axiosService: AxiosService
+  ) {}
 
   onSubmit(): void {
     if (!validateNumberLength(this.recipient, 10)) {

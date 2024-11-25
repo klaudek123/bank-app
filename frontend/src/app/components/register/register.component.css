@@ -1,6 +1,6 @@
 body {
-    height: fit-content; /*Ustawienie wysokości na całą wysokość widoku */
-    position: relative; /* Ustawienie pozycji na relative dla kontenera */
+    height: fit-content;
+    position: relative; 
 }
 
 .register-container{
@@ -14,15 +14,12 @@ body {
     position: absolute;
     top: 0;
     left: 0;
-    /* width: 100%;
-    height: 100%; */
     z-index: -1;
-    filter: brightness(0.85); /* zmniejszenie jasności do 80% */
+    filter: brightness(0.85);
 }
 
 .background-image img {
     width: 100%;
-    /* height: 20%; */
     object-fit: cover;
 }
 
@@ -61,19 +58,19 @@ body {
 
 button {
     margin: 0 1% 0 0;
-    background-color: #4c65af; /* Kolor tła */
+    background-color: #4c65af;
     border: none;
-    color: white; /* Kolor tekstu */
-    padding: 10px 20px; /* Wielkość i odstęp wewnątrz guzika */
+    color: white;
+    padding: 10px 20px; 
     text-align: center;
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
-    border-radius: 5px; /* Zaokrąglenie rogów */
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Dodanie cienia */
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
     cursor: pointer;
 }
 
 button:hover {
-    background-color: #4548a0; /* Zmiana koloru tła po najechaniu myszką */
+    background-color: #4548a0; 
 }

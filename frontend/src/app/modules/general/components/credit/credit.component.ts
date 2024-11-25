@@ -22,7 +22,6 @@ export class CreditComponent {
   }
 
   createForm() {
-    // Utwórz obiekt daty rok do przodu
     const endDateValue = new Date();
     endDateValue.setFullYear(endDateValue.getFullYear() + 1);
   

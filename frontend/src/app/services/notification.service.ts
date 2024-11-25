@@ -1,26 +1,25 @@
-
-import Stomp from 'stompjs';
-import SockJS from 'sockjs-client';
 import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment';
+import { Socket  } from 'ngx-socket-io';
+
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class NotificationService {
-  private stompClient!: Stomp.Client;
+  constructor(private socket: Socket) {}
+
 
   connect() {
-    const socket = new SockJS(`${environment.apiUrl}/ws`);
-    this.stompClient = Stomp.over(socket);
+    const token = localStorage.getItem('auth_token');
+    this.socket.ioSocket.auth = { token };
 
-    this.stompClient.connect({}, (frame) => {
-      console.log('Connected: ' + frame);
+    this.socket.connect();
+    console.log('Połączenie WebSocket nawiązane');
 
-      this.stompClient.subscribe('/topic/notifications', (message) => {
-        const transfer = JSON.parse(message.body);
-        this.notifyUser(transfer);
-      });
+    this.socket.fromEvent('topic/notifications').subscribe((message: any) => {
+      const transfer = JSON.parse(message.body);
+      this.notifyUser(transfer);
     });
   }
 
@@ -29,10 +28,8 @@ export class NotificationService {
   }
 
   disconnect() {
-    if (this.stompClient) {
-      this.stompClient.disconnect(() => {
-        console.log('Disconnected');
-      });
-    }
+    this.socket.disconnect();
+    console.log('Disconnected');
+    console.log('Rozłączono z WebSocket');
   }
 }

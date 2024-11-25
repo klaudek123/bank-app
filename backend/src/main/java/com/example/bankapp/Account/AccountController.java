@@ -1,6 +1,7 @@
 package com.example.bankapp.Account;
 
 import com.example.bankapp.Auth.*;
+import com.example.bankapp.Config.AppException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,20 +26,18 @@ public class AccountController {
     public List<Account> getAllAccounts() {
         return accountService.getAllAccounts();
     }
-    
+
     @PostMapping("/login")
-    public ResponseEntity<Object> login(@RequestBody LoginRequest loginRequest) {
-        boolean authenticated = authenticationService.authenticate(loginRequest.idAccount(), loginRequest.password());
-        if (authenticated) {
-            AuthDto authDto = new AuthDto(
-                    loginRequest.idAccount(),
-                    authenticationService.createToken(loginRequest.idAccount())
-            );
-            return ResponseEntity.ok(authDto);
-        } else {
-            ErrorResponse errorResponse = new ErrorResponse("Login error. Check email and password.");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+    public ResponseEntity<AuthDto> login(@RequestBody LoginRequest loginRequest) {
+        if (!authenticationService.authenticate(loginRequest.idAccount(), loginRequest.password())) {
+            throw new AppException("Invalid login credentials", HttpStatus.UNAUTHORIZED);
         }
+
+        AuthDto authDto = new AuthDto(
+                loginRequest.idAccount(),
+                authenticationService.createToken(loginRequest.idAccount())
+        );
+        return ResponseEntity.ok(authDto);
     }
     
     @GetMapping("/{idAccount}")

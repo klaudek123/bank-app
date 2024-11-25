@@ -75,12 +75,12 @@ export class RegisterComponent {
     
 
     const registerDTO = {
-      personalId: this.personalId, // Musisz przekazać personalId jako null, ponieważ serwer generuje nowy identyfikator
+      personalId: this.personalId, 
       firstname: this.firstname,
       lastname: this.lastname,
-      dateOfBirth: this.dateOfBirth, // Ta wartość może być null lub ustawiana na domyślną wartość w serwerze
+      dateOfBirth: this.dateOfBirth,
       email: this.email,
-      address: this.address, // Adres również może być null lub ustawiany w serwerze
+      address: this.address, 
       password: this.password
     };
 
@@ -91,7 +91,7 @@ export class RegisterComponent {
         (response) => {
           window.alert("Udało się założyć konto. Numer klienta to: "+ response);
           this.redirectToLogin = true;
-          this.router.navigateByUrl('/login'); // Przekierowanie do strony logowania po rejestracji
+          this.router.navigateByUrl('/login'); 
         },
         error => {
           window.alert("Błąd podczas rejestracji: "+ error);
@@ -102,7 +102,6 @@ export class RegisterComponent {
 }
 
 function validatePESEL(pesel: string): boolean {
-  // Sprawdzenie długości
   if (pesel.length !== 11) {
     return false;
   }
@@ -116,7 +115,6 @@ function validatePESEL(pesel: string): boolean {
 }
 
 function validateEmail(email: string): boolean {
-  // Prosta walidacja adresu email, można rozbudować
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
 }

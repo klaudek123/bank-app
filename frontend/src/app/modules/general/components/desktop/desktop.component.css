@@ -1,25 +1,24 @@
 .content {
     max-height: 90%;
     margin-top: 2%;
-    border-radius: 8px; /* Responsywne zaokrąglenie */
+    border-radius: 8px;
   }
   
   .section {
-    margin-bottom: 1%; /* Responsywne marginesy */
+    margin-bottom: 1%; 
     background-color: #fff;
-    padding: 2%; /* Responsywne marginesy */
-    border-radius: 8px; /* Responsywne zaokrąglenie */
+    padding: 2%; 
+    border-radius: 8px; 
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
   
   .section h2 {
-/* Responsywny rozmiar tekstu */
     color: #333;
-    margin-bottom: 1%; /* Responsywne marginesy */
+    margin-bottom: 1%; 
   }
   
   .section-content {
-    margin-top: 1%; /* Responsywne marginesy */
+    margin-top: 1%; 
   }
   
   .section ul {
@@ -28,7 +27,7 @@
   }
   
   .section ul li {
-    margin-bottom: 1%; /* Responsywne marginesy */
+    margin-bottom: 1%; 
   }
   
 
@@ -54,7 +53,7 @@
   
   .investments-table th,
   .investments-table td {
-    padding: 8px;
+    padding: 6px;
     border-bottom: 1px solid #ddd;
   }
   
@@ -73,11 +72,11 @@
   }
   
   .investments-table tbody {
-    max-height: 300px; /* Adjust this value according to your preference */
+    max-height: 300px; 
     overflow-y: auto;
   }
   
   .investments-table td {
-    white-space: nowrap; /* Prevent wrapping of text in cells */
+    white-space: nowrap; 
   }
   

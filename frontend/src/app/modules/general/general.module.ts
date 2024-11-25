@@ -15,7 +15,7 @@ import { SettingsComponent } from './components/settings/settings.component';
 import { NewsComponent } from './components/news/news.component';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
-
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -26,17 +26,18 @@ import { ReactiveFormsModule } from '@angular/forms';
     CreditComponent,
     InvestmentComponent,
     GeneralDashboardComponent,
-    TransferComponent,
     CounterpartyComponent,
     SettingsComponent,
-    NewsComponent
+    NewsComponent,
+    TransferComponent
   ],
   imports: [
     CommonModule,
     GeneralRoutingModule,
     FormsModule,
-    ReactiveFormsModule 
+    ReactiveFormsModule ,
+    RouterModule 
   ],
-  providers: [DatePipe] // Dodaj DatePipe do tablicy providers
+  providers: [DatePipe] 
 })
 export class GeneralModule { }

@@ -1,5 +1,6 @@
 package com.example.bankapp.Config;
 
+import com.example.bankapp.Transfer.TransferException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -27,9 +28,14 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(AppException.class)
     @ResponseBody
-    public ResponseEntity<ErrorDto> handleException(AppException ex) {
-        return ResponseEntity
-                .status(ex.getStatus())
-                .body(new ErrorDto(ex.getMessage()));
+    public ResponseEntity<ErrorDto> handleAppException(AppException ex) {
+        ErrorDto error = new ErrorDto(ex.getMessage());
+        return ResponseEntity.status(ex.getStatus()).body(error);
     }
+
+    @ExceptionHandler(TransferException.class)
+    public ResponseEntity<String> handleTransferException(TransferException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
+
 }

@@ -10,22 +10,19 @@ import { environment } from '../../../../../environments/environment';
 })
 export class HeaderComponent {
   showLogout: boolean = false;
-  user: any = { name: '', lastname: '' }; // Przykładowe dane użytkownika
+  user: any = { name: '', lastname: '' }; 
 
   
   constructor(private router: Router, private axiosService: AxiosService){ }
 
   ngOnInit(): void {
-     // Pobierz identyfikator konta z localStorage
-     const idAccount = localStorage.getItem('idAccount'); // działa już
-     console.log("idAccount = "+idAccount); // działa już
+     const idAccount = localStorage.getItem('idAccount'); 
+     console.log("idAccount = "+idAccount); 
      if (idAccount) {
-       // Wyślij żądanie do serwera, aby pobrać dane użytkownika na podstawie identyfikatora konta
        this.axiosService.request('GET', `${environment.apiUrl}/users/${idAccount}`, {})
         .then(
            (response) => {
             console.log(response);
-             // Ustaw dane użytkownika w komponencie nagłówka
              this.user.name = response.data.firstname;
              this.user.lastname = response.data.lastname;
            },
@@ -50,7 +47,6 @@ export class HeaderComponent {
   }
 
   logout(): void {
-    // Tutaj można dodać logikę wylogowania użytkownika
     localStorage.clear();
     this.router.navigate(['/login']);
   }

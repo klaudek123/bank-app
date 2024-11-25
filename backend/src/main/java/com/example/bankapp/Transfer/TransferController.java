@@ -20,37 +20,32 @@ public class TransferController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<TransferDto>> getTransfersByAccount(@PathVariable Long idAccount,
-                                                                   @RequestParam(value = "type", required = false) String type) {
+    public ResponseEntity<List<TransferDto>> getTransfersByAccount(@PathVariable Long idAccount, @RequestParam(value = "type", required = false) String type) {
+
         List<TransferDto> transfers;
 
-        if ("sent".equalsIgnoreCase(type)) {
-            transfers = transferService.getTransfersBySender(idAccount);
-        } else if ("received".equalsIgnoreCase(type)) {
-            transfers = transferService.getTransfersByRecipient(idAccount);
-        } else {
+        if (type == null) {
             transfers = transferService.getTransfersByAccount(idAccount);
+        } else {
+            switch (type.toLowerCase()) {
+                case "sent" -> transfers = transferService.getTransfersBySender(idAccount);
+                case "received" -> transfers = transferService.getTransfersByRecipient(idAccount);
+                default -> throw new TransferException("Invalid type parameter. Allowed values: 'sent', 'received'.");
+            }
         }
 
-        if (!transfers.isEmpty()) {
-            return ResponseEntity.ok(transfers);
-        } else {
+        if (transfers.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
+
+        return ResponseEntity.ok(transfers);
     }
 
 
     @PostMapping()
-    public ResponseEntity<String> makeTransfer(@PathVariable Long idAccount, @RequestBody TransferDto transferDTO) {
-        if (transferDTO.recipient().equals(transferDTO.sender())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Sender and recipient cannot be the same");
-        } else if (transferDTO.amount().compareTo(BigDecimal.ZERO) <= 0) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Transfer amount must be greater than zero");
-        } else {
-            transferService.makeTransfer(idAccount, transferDTO);
-            return ResponseEntity.ok("Transfer made successfully");
-        }
-
+    public ResponseEntity<String> processTransfer(@PathVariable Long idAccount, @RequestBody TransferDto transferDTO) {
+        transferService.processTransfer(idAccount, transferDTO);
+        return ResponseEntity.ok("Transfer made successfully");
     }
 
     @GetMapping("/{idTransfer}")

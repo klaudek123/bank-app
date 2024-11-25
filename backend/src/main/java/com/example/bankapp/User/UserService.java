@@ -24,22 +24,18 @@ public class UserService {
     }
 
     public Long registerUser(UserRegisterDto userRegisterDTO) {
-        User user;
+        User user = createUser(userRegisterDTO);
+        return accountService.generateAccount(userRegisterDTO, user).getIdAccount();
+    }
 
+    private User createUser(UserRegisterDto userRegisterDTO) {
         if (!userRepository.existsById(userRegisterDTO.personalId())) {
-            // Create a new user
-            user = UserMapper.INSTANCE.userRegisterDTOtoUser(userRegisterDTO);
-            userRepository.save(user);
+            User user = UserMapper.INSTANCE.userRegisterDTOtoUser(userRegisterDTO);
+            return userRepository.save(user);
         } else {
-            // Fetch the existing user
-            user = userRepository.findById(userRegisterDTO.personalId())
+            return userRepository.findById(userRegisterDTO.personalId())
                     .orElseThrow(() -> new RuntimeException("User not found"));
         }
-
-        // Create a new account for the user
-        Account account = accountService.generateAccount(userRegisterDTO, user);
-
-        return account.getIdAccount();
     }
 
     public List<User> getAllUsers() {

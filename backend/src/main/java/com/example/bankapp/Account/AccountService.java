@@ -6,7 +6,6 @@ import com.example.bankapp.Mappers.AccountMapper;
 import com.example.bankapp.User.User;
 import com.example.bankapp.User.UserRegisterDto;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -41,7 +40,7 @@ public class AccountService {
     }
 
     protected Long generateUniqueAccountNumber() {
-        Long maxNumber = accountRepository.findTopByNumber();
+        Long maxNumber = accountRepository.findMaxAccountNumber();
         return (maxNumber != null) ? maxNumber + 1 : 1000000001L;
     }
 
@@ -75,8 +74,8 @@ public class AccountService {
         return accountRepository.getNumberByIdAccount(idAccount);
     }
 
-    public Long getIdAccountByNumber(Long recipient) {
-        return accountRepository.getIdAccountByNumber(recipient);
+    public Account getAccountByNumber(Long recipient) {
+        return accountRepository.getAccountByNumber(recipient);
     }
 
     public void transferFunds(Long senderId, Long recipientId, BigDecimal amount) {

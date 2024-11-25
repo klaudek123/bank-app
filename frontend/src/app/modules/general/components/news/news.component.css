@@ -1,0 +1,64 @@
+.filter-section {
+    margin-bottom: 10px;
+  }
+  
+  .filter-section label {
+    margin-right: 10px;
+  }
+  
+  .news-section {
+    margin-bottom: 1%;
+    background-color: #fff;
+    padding: 2%;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .messages-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fbfbfb;
+  }
+  
+  .messages-table th,
+  .messages-table td {
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .messages-table th {
+    background-color: #f2f2f2;
+  }
+  
+  .messages-table tr:hover {
+    background-color: #e6e0e0;
+    cursor: pointer; 
+  }
+  
+  .messages-table th.status,
+  .messages-table td.status {
+    width: 150px; 
+  }
+  
+  .messages-table th.date,
+  .messages-table td.date {
+    width: 100px; 
+  }
+  
+  .messages-table th.subject,
+  .messages-table td.subject {
+    width: 200px; 
+  }
+  
+  .messages-table th.sender,
+  .messages-table td.sender {
+    width: 150px; 
+  }
+  
+  .message-content {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  

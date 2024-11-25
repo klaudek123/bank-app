@@ -10,14 +10,14 @@
 .header-left {
     width: 50%;
     height: 100%;
-    padding: 0 2%; /* Drobne poprawki marginesu */
+    padding: 0 2%; 
 }
 
 .header-right {
     width: 50%;
     height: 100%;
     text-align: right;
-    padding: 0 2%; /* Drobne poprawki marginesu */ 
+    padding: 0 2%;
     position: relative;
 }
 

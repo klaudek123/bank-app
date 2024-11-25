@@ -65,7 +65,7 @@ public class AccountServiceTest {
     @Test
     public void testGenerateUniqueAccountNumber_NoAccounts() {
         // Arrange
-        when(accountRepository.findTopByNumber()).thenReturn(null);
+        when(accountRepository.findMaxAccountNumber()).thenReturn(null);
 
         // Act
         Long result = accountService.generateUniqueAccountNumber();
@@ -77,7 +77,7 @@ public class AccountServiceTest {
     @Test
     public void testGenerateUniqueAccountNumber_WithAccounts() {
         // Arrange
-        when(accountRepository.findTopByNumber()).thenReturn(1000000005L);
+        when(accountRepository.findMaxAccountNumber()).thenReturn(1000000005L);
 
         // Act
         Long result = accountService.generateUniqueAccountNumber();

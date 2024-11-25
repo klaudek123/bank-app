@@ -1,1 +1,48 @@
-<p>news works!</p>
+<div class="content">
+    <div class="section news-section">
+      <h2>Wiadomości:</h2>
+  
+      <div class="filter-section">
+        <label>
+          <input type="radio" name="filter" value="ALL" [(ngModel)]="filter" /> Wszystkie
+        </label>
+        <label>
+          <input type="radio" name="filter" value="UNREAD" [(ngModel)]="filter" /> Nieprzeczytane
+        </label>
+        <label>
+          <input type="radio" name="filter" value="READ" [(ngModel)]="filter" /> Przeczytane
+        </label>
+      </div>
+  
+      <table class="messages-table">
+        <thead>
+          <tr>
+            <th class="date">Data</th>  
+            <th class="subject">Temat</th> 
+            <th class="sender">Od</th>  
+            <th class="status">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let message of filteredMessages()" (click)="selectMessage(message)" class="message-row">
+                <td class="date">{{ message.date | date: 'dd.MM.yyyy' }}</td>
+                <td class="subject">{{ message.subject }}</td> 
+                <td class="sender">{{ message.sender }}</td> 
+                <td class="status" [ngSwitch]="message.status">
+                  <span *ngSwitchCase="'UNREAD'" class="unread">Nieprzeczytana</span>
+                  <span *ngSwitchCase="'READ'" class="read">Przeczytana</span>
+                  <span *ngSwitchDefault>{{ message.status }}</span>
+                </td>
+              </tr>
+        </tbody>
+      </table>
+  
+      <div class="message-content" *ngIf="selectedMessage">
+        <h3>Temat: {{ selectedMessage.subject }}</h3>
+        <p><strong>Data:</strong> {{ selectedMessage.date | date: 'dd.MM.yyyy HH:mm' }}</p>
+        <p><strong>Od:</strong> {{ selectedMessage.sender }}</p>
+        <p>{{ selectedMessage.content }}</p>
+      </div>
+    </div>
+  </div>
+  

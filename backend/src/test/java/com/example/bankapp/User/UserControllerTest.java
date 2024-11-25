@@ -42,7 +42,7 @@ public class UserControllerTest {
 
 
     @Test
-    public void testgetAccountDetails_ReturnsUser_WhenUserExists() throws Exception {
+    public void testGetAccountDetails_ReturnsUser_WhenUserExists() throws Exception {
         // Arrange
         Long personalId = 1L;
         Long idAccount = 123L;
@@ -78,7 +78,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testgetAccountDetails_ReturnsNotFound_WhenUserDoesNotExist() throws Exception {
+    public void testGetAccountDetails_ReturnsNotFound_WhenUserDoesNotExist() throws Exception {
         // Arrange
         Long idAccount = 123L;
 
@@ -91,7 +91,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testgetAccountDetails_NoIdAccount_ReturnsBadRequest() throws Exception {
+    public void testGetAccountDetails_NoIdAccount_ReturnsBadRequest() throws Exception {
         // Act and Assert
         mockMvc.perform(get("/users/null"))
                 .andExpect(status().isBadRequest())
@@ -99,7 +99,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testgetAccountDetails_ExceptionThrown_ReturnsInternalServerError() throws Exception {
+    public void testGetAccountDetails_ExceptionThrown_ReturnsInternalServerError() throws Exception {
         // Arrange
         when(accountService.getIdUserByIdAccount(any())).thenThrow(new RuntimeException("An unexpected error occurred"));
 
@@ -112,7 +112,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testgetAccountDetails_EmptyUser_ReturnsNotFound() throws Exception {
+    public void testGetAccountDetails_EmptyUser_ReturnsNotFound() throws Exception {
         // Arrange
         when(accountService.getIdUserByIdAccount(any())).thenReturn(1L);
         when(userService.getAccountDetailsByPersonalId(any())).thenReturn(Optional.empty());

@@ -2,6 +2,8 @@ package com.example.bankapp.Transfer;
 
 import com.example.bankapp.Account.Account;
 import com.example.bankapp.Account.AccountService;
+import com.example.bankapp.Kafka.KafkaProducer;
+import com.example.bankapp.Mappers.TransferMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -23,6 +25,12 @@ public class TransferServiceTest {
 
     @Mock
     private AccountService accountService;
+
+    @Mock
+    private KafkaProducer kafkaProducer;
+
+    @Mock
+    private TransferMapper transferMapper;
 
     @InjectMocks
     private TransferService transferService;
@@ -103,7 +111,7 @@ public class TransferServiceTest {
     }
 
     @Test
-    public void testMakeTransfer() {
+    public void testProcessTransfer() {
         Long idAccount = 1L;
 
         TransferDto transferDto = new TransferDto(
@@ -120,18 +128,16 @@ public class TransferServiceTest {
         Account recipientAccount = new Account();
         recipientAccount.setIdAccount(2L);
 
-        when(accountService.getIdAccountByNumber(transferDto.sender())).thenReturn(idAccount);
         when(accountService.getAccountById(idAccount)).thenReturn(senderAccount);
 
-        when(accountService.getIdAccountByNumber(transferDto.recipient())).thenReturn(recipientAccount.getIdAccount());
-        when(accountService.getAccountById(recipientAccount.getIdAccount())).thenReturn(recipientAccount);
+        when(accountService.getAccountByNumber(transferDto.recipient())).thenReturn(recipientAccount);
 
         when(transferRepository.save(any(Transfer.class))).thenAnswer(invocation -> invocation.getArguments()[0]);
 
-        transferService.makeTransfer(idAccount, transferDto);
+        transferService.processTransfer(idAccount, transferDto);
 
         verify(accountService, times(1)).getAccountById(idAccount);
-        verify(accountService, times(1)).getIdAccountByNumber(456L);
+        verify(accountService, times(1)).getAccountByNumber(456L);
         verify(transferRepository, times(2)).save(any(Transfer.class));
         verify(accountService, times(1)).transferFunds(idAccount, 2L, BigDecimal.valueOf(100));
     }

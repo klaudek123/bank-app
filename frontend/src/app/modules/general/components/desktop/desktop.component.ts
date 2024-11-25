@@ -75,7 +75,7 @@ export class DesktopComponent {
         ).catch(
           (error) => {
             if (error.response.status === 401) {
-              // this.axiosService.setAuthToken(null);
+               this.axiosService.setAuthToken(null);
             } else {
                 // this.testAccountInfo.owner = error.response.code;
             }

@@ -4,6 +4,7 @@ import com.example.bankapp.Auth.AuthDto;
 import com.example.bankapp.Auth.AuthenticationService;
 import com.example.bankapp.Auth.ErrorResponse;
 import com.example.bankapp.Auth.LoginRequest;
+import com.example.bankapp.Config.AppException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -58,12 +59,12 @@ public class AccountControllerTest {
         when(authenticationService.createToken(loginRequest.idAccount())).thenReturn("token");
 
         // Act
-        ResponseEntity<Object> response = accountController.login(loginRequest);
+        ResponseEntity<AuthDto> response = accountController.login(loginRequest);
 
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertInstanceOf(AuthDto.class, response.getBody());
-        AuthDto authDto = (AuthDto) response.getBody();
+        AuthDto authDto = response.getBody();
         assertEquals(loginRequest.idAccount(), authDto.idAccount());
         assertEquals("token", authDto.token());
         verify(authenticationService, times(1)).authenticate(loginRequest.idAccount(), loginRequest.password());
@@ -76,14 +77,10 @@ public class AccountControllerTest {
         LoginRequest loginRequest = new LoginRequest(1L, "wrongPassword");
         when(authenticationService.authenticate(loginRequest.idAccount(), loginRequest.password())).thenReturn(false);
 
-        // Act
-        ResponseEntity<Object> response = accountController.login(loginRequest);
-
-        // Assert
-        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
-        assertInstanceOf(ErrorResponse.class, response.getBody());
-        ErrorResponse errorResponse = (ErrorResponse) response.getBody();
-        assertEquals("Login error. Check email and password.", errorResponse.error());
+        // Act & Assert
+        AppException exception = assertThrows(AppException.class, () -> accountController.login(loginRequest));
+        assertEquals("Invalid login credentials", exception.getMessage());
+        assertEquals(HttpStatus.UNAUTHORIZED, exception.getStatus());
         verify(authenticationService, times(1)).authenticate(loginRequest.idAccount(), loginRequest.password());
         verify(authenticationService, never()).createToken(any());
     }

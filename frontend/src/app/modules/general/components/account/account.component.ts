@@ -6,32 +6,30 @@ import { environment } from '../../../../../environments/environment';
 @Component({
   selector: 'app-account',
   templateUrl: './account.component.html',
-  styleUrl: './account.component.css'
+  styleUrls: ['./account.component.css']
 })
 export class AccountComponent {
 
   transfers: Transfer[] = []; 
-
+  selectedFilter: string = ''; 
+  filterValue: string = ''; 
+  startDate: Date | null = null; 
+  endDate: Date | null = null;
 
 
   constructor(private axiosService: AxiosService) { }
 
   ngOnInit(): void {
-    // Pobierz identyfikator konta z localStorage
     const idAccount = localStorage.getItem('idAccount');
     console.log("idAccount = " + idAccount);
     if (idAccount) {
-      // Wyślij żądanie do serwera, aby pobrać dane użytkownika na podstawie identyfikatora konta
-      this.axiosService.request('GET', `${environment.apiUrl}/accounts/${idAccount}/transfers`, {})
+      this.axiosService.request('GET',`${environment.apiUrl}/accounts/${idAccount}/transfers`, {})
         .then(
           (response) => {
             console.log(response);
-            // przypisywanie do tablicy obiektów wartości
             if (Array.isArray(response.data)) {
-              // Jeśli tak, przypisz odpowiedź do tablicy transfers
               this.transfers = response.data;
             } else {
-              // Jeśli nie, umieść pojedynczy obiekt w tablicy transfers
               this.transfers = [response.data];
             }
           }
@@ -45,7 +43,50 @@ export class AccountComponent {
             console.error('Błąd podczas pobierania danych użytkownika.', error);
           }
         );
-    }
- }
-}
+      }
+  }
+  filteredTransfers(): Transfer[] {
+    let filtered = this.transfers;
 
+    if (this.selectedFilter && this.startDate) {
+      filtered = filtered.filter(transfer => transfer.date >= this.startDate!);
+    }
+    if (this.selectedFilter && this.endDate) {
+      filtered = filtered.filter(transfer => transfer.date < this.endDate!);
+    }
+
+    if (this.selectedFilter && this.filterValue) {
+      const value = this.filterValue.toLowerCase(); 
+      filtered = filtered.filter(transfer => {
+        switch (this.selectedFilter) {
+          case 'sender':
+            return transfer.sender.toString().includes(value);
+          case 'recipient':
+            return transfer.recipient.toString().includes(value);
+          case 'title':
+            return transfer.title.toLowerCase().includes(value);
+          case 'amount':
+            return transfer.amount.toString().includes(value);
+          default:
+            return true;
+        }
+      });
+    }
+
+    return filtered;
+  }
+  onFilterTypeChange(): void {
+    this.clearFilter();
+  
+    setTimeout(() => {
+      this.filterValue = ''; 
+    }, 0);
+  }
+
+
+  clearFilter(): void {
+    this.filterValue = ''; 
+    this.startDate = null;
+    this.endDate = null;
+  }
+}

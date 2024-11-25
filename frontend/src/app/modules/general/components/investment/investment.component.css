@@ -1,9 +1,9 @@
 .investment-form {
     background-color: #fff;
     margin-top: 2%;
-    border-radius: 8px; /* Responsywne zaokrąglenie */
+    border-radius: 8px; 
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    height: 90%;
+    height: 93%;
   }
   
   .investment-form h2 {
@@ -32,7 +32,7 @@
   }
   
   .form-control {
-    width: calc(100% - 20px); /* Dodatkowe 20px dla marginesu wewnętrznego */
+    width: calc(100% - 20px); 
     padding: 10px;
     border: 1px solid #ccc;
     background-color: #f7f7f7;
